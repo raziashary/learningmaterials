@@ -1,0 +1,2044 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="A step-by-step design for dense retrieval, rubric reranking, and feedback-driven memory search.">
+<title>Dense Memory with Evolving Rubrics · Razi Ashary</title>
+<style>
+:root{color-scheme:light dark;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f7f5f1;color:#21302d}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-width:0}a{color:#226f5e;text-underline-offset:3px}
+.topbar{position:sticky;top:0;z-index:5;background:#f7f5f1ee;backdrop-filter:blur(12px);border-bottom:1px solid #d8ded8}
+.topbar-inner{max-width:1220px;min-height:62px;margin:auto;padding:10px 24px;display:flex;align-items:center;gap:16px}
+.home-link{display:inline-block;flex-shrink:0;padding:8px 12px;border:1px solid #c9d6cc;border-radius:9px;text-decoration:none;font-size:.84rem;font-weight:700}
+.home-link:hover,.home-link:focus-visible{background:#e5eee7}.topbar-title{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:.85rem;color:#5a6b60}
+.layout{max-width:1220px;margin:0 auto;padding:42px 24px 100px;display:grid;grid-template-columns:250px minmax(0,1fr);align-items:start;gap:44px}
+.sidebar{position:sticky;top:90px;max-height:calc(100vh - 110px);overflow:auto;padding:8px 12px 16px 0;border-right:1px solid #d8ded8}
+.sidebar h2{margin:0 0 12px;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:#66776d}.sidebar ol,.mobile-toc ol{margin:0;padding-left:18px}.sidebar li,.mobile-toc li{margin:8px 0;line-height:1.35;font-size:.82rem}.sidebar a,.mobile-toc a{text-decoration:none}.sidebar a:hover,.mobile-toc a:hover{text-decoration:underline}
+.mobile-toc{display:none}.article{min-width:0;max-width:880px;line-height:1.75;font-size:1.02rem}.article h1,.article h2,.article h3,.article h4{line-height:1.2;letter-spacing:-.03em;scroll-margin-top:84px;color:#1c3430}
+.article h1{margin:0 0 12px;font-size:clamp(2.2rem,5vw,3.55rem);letter-spacing:-.055em}.article h2{margin:2.5em 0 .8em;padding-top:.1em;border-top:1px solid #d8ded8;font-size:1.68rem}.article h3{margin:2em 0 .65em;font-size:1.27rem}.article h4{margin:1.6em 0 .5em;font-size:1.08rem}
+.article p{margin:1em 0}.article ul,.article ol{padding-left:1.5em}.article li{margin:.35em 0}.article blockquote{margin:1.4em 0;padding:.5em 1.15em;border-left:4px solid #6da28e;background:#eaf2ed;border-radius:0 9px 9px 0}.article blockquote p{margin:.45em 0}
+.article pre,.article code{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace}.article pre{max-width:100%;overflow-x:auto;padding:16px 18px;border:1px solid #d8ded8;border-radius:10px;background:#eef1ed;font-size:.79em;line-height:1.55;tab-size:4}.article pre code{background:none;padding:0;border:0}.article :not(pre)>code{padding:.12em .3em;border-radius:4px;background:#edf0e9;font-size:.88em;overflow-wrap:anywhere}
+.article table{display:block;width:max-content;max-width:100%;overflow-x:auto;border-collapse:collapse;margin:1.5em 0;font-size:.86em;line-height:1.4}.article th,.article td{min-width:120px;padding:10px 12px;border:1px solid #d8ded8;text-align:left;vertical-align:top}.article th{background:#eaf2ed}.article hr{border:0;border-top:1px solid #d8ded8;margin:2.6em 0}.article mjx-container[display="true"]{max-width:100%;overflow-x:auto;overflow-y:hidden}
+.reading-note{margin:0 0 2.4rem;color:#687970;font-size:.85rem}.article img{max-width:100%;height:auto}
+@media(max-width:850px){.layout{display:block;padding:28px 18px 72px}.sidebar{display:none}.mobile-toc{display:block;margin:0 0 34px;padding:13px 16px;border:1px solid #d8ded8;border-radius:10px;background:#eef3ee}.mobile-toc summary{cursor:pointer;font-weight:700}.mobile-toc ol{margin-top:12px}.article{font-size:1rem}.article h2{font-size:1.48rem}.topbar-inner{padding:8px 18px;min-height:56px}}
+@media(prefers-color-scheme:dark){:root{background:#111917;color:#e5ece7}a{color:#8fd1b4}.topbar{background:#111917ee;border-color:#34443a}.home-link{border-color:#455b4c}.home-link:hover,.home-link:focus-visible{background:#24362b}.topbar-title,.reading-note{color:#a9b9ac}.sidebar{border-color:#34443a}.sidebar h2{color:#a9b9ac}.article h1,.article h2,.article h3,.article h4{color:#edf5ef}.article h2,.article hr{border-color:#34443a}.article blockquote,.mobile-toc{background:#1c3024;border-color:#4f7b60}.article pre{background:#151f19;border-color:#34443a}.article :not(pre)>code{background:#26362b}.article th,.article td{border-color:#34443a}.article th{background:#1c3024}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{.topbar,.sidebar,.mobile-toc{display:none!important}.layout{display:block;padding:0}.article{max-width:none;font-size:10.5pt;color:#111}.article h1,.article h2,.article h3,.article h4{color:#111}.article pre{white-space:pre-wrap;overflow:visible}.article table{max-width:none;overflow:visible}.article tr{break-inside:avoid}}
+</style>
+<script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['$$','$$']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
+</head>
+<body>
+<header class="topbar"><div class="topbar-inner"><a class="home-link" href="../index.html">← Back to library</a><span class="topbar-title">Dense Memory with Evolving Rubrics</span></div></header>
+<main class="layout">
+<nav class="sidebar" aria-label="Contents"><h2>Contents</h2><ol><li><a href="#1-prerequisites-dependencies">1. Prerequisites &amp; Dependencies</a></li><li><a href="#2-architecture-overview">2. Architecture Overview</a></li><li><a href="#3-development-timeline">3. Development Timeline</a></li><li><a href="#4-phase-1-encoding-engine">4. Phase 1: Encoding Engine</a></li><li><a href="#5-phase-2-storage-indexing">5. Phase 2: Storage &amp; Indexing</a></li><li><a href="#6-phase-3-search-retrieval">6. Phase 3: Search &amp; Retrieval</a></li><li><a href="#7-phase-4-evolving-rubric-system">7. Phase 4: Evolving Rubric System</a></li><li><a href="#8-phase-5-integration-densememory">8. Phase 5: Integration — DenseMemory</a></li><li><a href="#9-implementation-checklist">9. Implementation Checklist</a></li><li><a href="#10-key-takeaways">10. Key Takeaways</a></li></ol></nav>
+<div><details class="mobile-toc"><summary>Contents</summary><ol><li><a href="#1-prerequisites-dependencies">1. Prerequisites &amp; Dependencies</a></li><li><a href="#2-architecture-overview">2. Architecture Overview</a></li><li><a href="#3-development-timeline">3. Development Timeline</a></li><li><a href="#4-phase-1-encoding-engine">4. Phase 1: Encoding Engine</a></li><li><a href="#5-phase-2-storage-indexing">5. Phase 2: Storage &amp; Indexing</a></li><li><a href="#6-phase-3-search-retrieval">6. Phase 3: Search &amp; Retrieval</a></li><li><a href="#7-phase-4-evolving-rubric-system">7. Phase 4: Evolving Rubric System</a></li><li><a href="#8-phase-5-integration-densememory">8. Phase 5: Integration — DenseMemory</a></li><li><a href="#9-implementation-checklist">9. Implementation Checklist</a></li><li><a href="#10-key-takeaways">10. Key Takeaways</a></li></ol></details><article class="article"><p class="reading-note">Research and learning notes · A step-by-step design for dense retrieval, rubric reranking, and feedback-driven memory search.</p><h1 id="building-dense-memory-with-evolving-rubrics">Building Dense Memory with Evolving Rubrics</h1>
+<p><strong>Goal</strong>: Build a dense memory system using FAISS-based dense retrieval, augmented with an Evolving Rubric layer inspired by RLER (Shao et al., 2025). The rubric system continuously refines retrieval quality by learning — from each retrieval cycle — what criteria actually distinguish useful from useless memories for a given query or session context.</p>
+<p><strong>Core Idea</strong>: KNN retrieval via FAISS gives you <em>candidates ranked by embedding similarity</em>. Evolving rubrics give you a second, semantically richer scoring pass that re-ranks and filters those candidates based on <strong>what the agent actually found useful</strong>, not just what was geometrically close in vector space. Rubrics evolve: they are generated by contrasting retrieved memories that were used vs. ignored, updated every retrieval cycle, and pruned when they stop discriminating.</p>
+<p><strong>Total Implementation</strong>: ~600 lines of core code across 8 modules</p>
+<hr>
+<h2 id="1-prerequisites-dependencies">1. Prerequisites &amp; Dependencies</h2>
+<h3 id="required-libraries">Required Libraries</h3>
+<p><strong>1. Encoding (Text → Vector)</strong>:</p>
+<pre><code class="language-bash">pip install transformers torch
+# Or: pip install sentence-transformers  # Higher-level wrapper
+</code></pre>
+<p><strong>2. Vector Storage &amp; Search</strong>:</p>
+<pre><code class="language-bash">pip install faiss-cpu  # CPU-only
+# OR
+pip install faiss-gpu  # GPU-accelerated (requires CUDA)
+</code></pre>
+<p><strong>3. Utilities</strong>:</p>
+<pre><code class="language-bash">pip install numpy scikit-learn
+</code></pre>
+<p><strong>4. Rubric System (NEW)</strong>:</p>
+<pre><code class="language-bash">pip install openai          # For rubric generation + judging via LLM API
+pip install tiktoken        # Token counting for prompt budget management
+pip install diskcache        # Lightweight cache for rubric judge results
+</code></pre>
+<p><strong>Optional but Recommended</strong>:</p>
+<pre><code class="language-bash">pip install tqdm             # Progress bars
+pip install redis            # If integrating with warm session cache layer
+</code></pre>
+<h3 id="not-needed">NOT Needed</h3>
+<ul>
+<li>❌ <code>pyserini</code></li>
+<li>❌ <code>pyjnius</code></li>
+<li>❌ <code>anserini</code></li>
+<li>❌ Java</li>
+</ul>
+<p><strong>Total installation</strong>: ~2.1GB (includes PyTorch + OpenAI client)</p>
+<h3 id="llm-requirements-for-rubric-system">LLM Requirements for Rubric System</h3>
+<p>The evolving rubric system uses two LLM roles, consistent with the RLER paper&#39;s architecture:</p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Purpose</th>
+<th>Recommended Model</th>
+<th>Cost Profile</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Rubric Generator</strong> (<code>G_rubric</code>)</td>
+<td>Creates new rubrics by contrasting retrievals</td>
+<td><code>gpt-4.1</code> or <code>claude-3-5-sonnet</code></td>
+<td>Called once per retrieval cycle</td>
+</tr>
+<tr>
+<td><strong>Rubric Judge</strong> (<code>JUDGE</code>)</td>
+<td>Scores a memory against a rubric criterion</td>
+<td><code>gpt-4.1-mini</code> or <code>claude-3-haiku</code></td>
+<td>Called K × N times per search</td>
+</tr>
+</tbody></table>
+<p>The judge is called far more frequently than the generator, so use a cheaper/faster model for judging. If latency is critical, you can batch judge calls or cache them aggressively — memory content doesn&#39;t change, so <code>JUDGE(r_k, memory_m)</code> is deterministic and cacheable.</p>
+<hr>
+<h2 id="2-architecture-overview">2. Architecture Overview</h2>
+<h3 id="five-layer-system">Five-Layer System</h3>
+<pre><code>┌───────────────────────────────────────────────────────────────────┐
+│  Layer 5: Evolving Rubric System (NEW)                            │
+│  - Rubric buffer management (persistent + active rubrics)         │
+│  - Rubric generation by contrasting used vs. unused retrievals    │
+│  - Variance-based pruning (std=0 → retire rubric)                 │
+│  - Rubric-guided re-ranking on top of KNN candidates              │
+│  Components: RubricBuffer, RubricGenerator, RubricJudge           │
+└───────────────────────────────────────────────────────────────────┘
+                              ↓ re-ranks results from
+┌───────────────────────────────────────────────────────────────────┐
+│  Layer 4: Search Interface                                        │
+│  - Query encoding                                                 │
+│  - Vector search (KNN over FAISS)                                 │
+│  - Two-stage retrieval: KNN candidates → rubric re-ranking        │
+│  - Metadata filtering &amp; hybrid scoring                            │
+│  Components: DenseSearch                                      │
+└───────────────────────────────────────────────────────────────────┘
+                              ↓ reads from
+┌───────────────────────────────────────────────────────────────────┐
+│  Layer 3: Storage Manager                                         │
+│  - FAISS vector index                                             │
+│  - Metadata store (SQLite)                                        │
+│  - DocID mapping                                                  │
+│  - Rubric buffer store (SQLite — separate table)                  │
+│  Components: DenseVectorIndex, DenseMetadataStore         │
+└───────────────────────────────────────────────────────────────────┘
+                              ↓ stores output of
+┌───────────────────────────────────────────────────────────────────┐
+│  Layer 2: Encoding Engine                                         │
+│  - Text → Vector conversion                                       │
+│  - Pooling &amp; normalization                                        │
+│  - Batch processing                                               │
+│  Components: DenseEncoder                                     │
+└───────────────────────────────────────────────────────────────────┘
+                              ↓ receives input from
+┌───────────────────────────────────────────────────────────────────┐
+│  Layer 1: Memory Interface (DenseMemory)                      │
+│  - Unified API: add(), search(), delete(), rebuild()              │
+│  - Orchestrates all layers                                        │
+│  - Triggers rubric evolution after each search cycle              │
+└───────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="module-map">Module Map</h3>
+<pre><code>dense_memory/
+├── encoder.py          # DenseEncoder (~50 lines)
+├── index.py            # DenseVectorIndex (~80 lines)
+├── metadata.py         # DenseMetadataStore (~60 lines)
+├── search.py           # DenseSearch (~100 lines)
+├── rubric_buffer.py    # RubricBuffer (~90 lines)      [NEW]
+├── rubric_generator.py # RubricGenerator (~80 lines)  [NEW]
+├── rubric_judge.py     # RubricJudge (~70 lines)      [NEW]
+├── memory.py           # DenseMemory (~130 lines)
+└── utils.py            # Shared helpers
+</code></pre>
+<h3 id="how-the-rubric-layer-fits-into-a-search-cycle">How the Rubric Layer Fits Into a Search Cycle</h3>
+<pre><code>User Query
+    │
+    ▼
+[Encode query]
+    │
+    ▼
+[FAISS KNN] ──────────────────────────────────────► 50 raw candidates
+    │                                                        │
+    │                                                        ▼
+    │                                         [RubricJudge scores each]
+    │                                         S(q, mᵢ) = rubric score
+    │                                                        │
+    │                                                        ▼
+    │                                         [Hybrid re-rank]
+    │                                         final_score = α·emb + β·rubric
+    │                                                        │
+    ▼                                                        ▼
+[Return top-k]◄────────────────────────────────────── sorted results
+    │
+    ▼
+[Agent uses results, cites some memories, ignores others]
+    │
+    ▼
+[RubricGenerator observes used vs. unused]
+    │
+    ├── Generate new positive rubrics (what made used memories good?)
+    ├── Generate new negative rubrics (what made unused memories bad?)
+    └── Update rubric buffer + variance filter
+</code></pre>
+<h3 id="the-rubric-scoring-formula-from-rler">The Rubric Scoring Formula (from RLER)</h3>
+<p>For a query <code>q</code> and retrieved memory <code>m</code>, the rubric score is:</p>
+<p>$$S(q, m) = \frac{\sum_{k=1}^{K} w_k \cdot \text{JUDGE}(r_k, m)}{\sum_{k: w_k &gt; 0} w_k}$$</p>
+<p>Where:</p>
+<ul>
+<li><code>r_k</code> — the k-th rubric criterion (a natural language assertion)</li>
+<li><code>w_k</code> — weight of rubric k (can be <strong>negative</strong> to penalize failure modes)</li>
+<li><code>JUDGE(r_k, m)</code> — LM judge returning <code>{0, 0.5, 1}</code> for how well memory <code>m</code> satisfies <code>r_k</code></li>
+<li>Denominator normalizes only over positive-weight rubrics</li>
+</ul>
+<p>The final hybrid retrieval score blends embedding similarity with rubric score:</p>
+<p>$$\text{score}_{\text{final}}(q, m) = \alpha \cdot \text{cosine}(q, m) + \beta \cdot S(q, m) + \gamma \cdot \text{recency}(m)$$</p>
+<p>Default weights: <code>α=0.50, β=0.35, γ=0.15</code></p>
+<hr>
+<h2 id="3-development-timeline">3. Development Timeline</h2>
+<p><strong>Build in this order</strong> — each phase is independently testable:</p>
+<h3 id="phase-1-encoding-engine-week-1">Phase 1: Encoding Engine (Week 1)</h3>
+<p><strong>Goal</strong>: Text → Vector conversion working</p>
+<ol>
+<li>✅ Set up model loading</li>
+<li>✅ Implement pooling strategies</li>
+<li>✅ Implement L2 normalization</li>
+<li>✅ Implement batch encoding</li>
+<li>✅ Test with sample texts</li>
+</ol>
+<p><strong>Deliverable</strong>: <code>encoder.py</code> with <code>DenseEncoder</code> class</p>
+<hr>
+<h3 id="phase-2-storage-indexing-week-2">Phase 2: Storage &amp; Indexing (Week 2)</h3>
+<p><strong>Goal</strong>: Vectors stored in FAISS, metadata + rubric buffer in SQLite</p>
+<ol start="6">
+<li>✅ FAISS index selection logic</li>
+<li>✅ Build vector index wrapper</li>
+<li>✅ Build metadata store (memories table)</li>
+<li>✅ <strong>Add rubric buffer table to metadata store</strong> ← rubric integration point</li>
+<li>✅ Implement incremental updates</li>
+<li>✅ Test add/save/load operations</li>
+</ol>
+<p><strong>Deliverable</strong>: <code>index.py</code>, <code>metadata.py</code> (with rubric buffer schema)</p>
+<hr>
+<h3 id="phase-3-search-retrieval-week-3">Phase 3: Search &amp; Retrieval (Week 3)</h3>
+<p><strong>Goal</strong>: Query → KNN candidates (pre-rubric ranking)</p>
+<ol start="12">
+<li>✅ Basic search implementation</li>
+<li>✅ Batch search optimization</li>
+<li>✅ HNSW tuning controls</li>
+<li>✅ Thread control</li>
+<li>✅ Result deduplication</li>
+<li>✅ Metadata filtering</li>
+<li>✅ Error handling</li>
+</ol>
+<p><strong>Deliverable</strong>: <code>search.py</code> — returns raw KNN candidates with embedding scores</p>
+<hr>
+<h3 id="phase-4-evolving-rubric-system-week-4-new-phase">Phase 4: Evolving Rubric System (Week 4) ← NEW PHASE</h3>
+<p><strong>Goal</strong>: Rubric buffer management, rubric-guided re-ranking, and evolution</p>
+<ol start="19">
+<li>✅ Build <code>RubricBuffer</code> — two-compartment storage (persistent + active)</li>
+<li>✅ Build <code>RubricGenerator</code> — LLM-based rubric generation from retrieval contrasts</li>
+<li>✅ Build <code>RubricJudge</code> — LLM-based scoring of memory against rubric + caching</li>
+<li>✅ Integrate rubric re-ranking into <code>DenseSearch</code></li>
+<li>✅ Implement variance filter for active rubric pruning</li>
+<li>✅ Test rubric evolution with multi-turn retrieval scenarios</li>
+</ol>
+<p><strong>Deliverable</strong>: <code>rubric_buffer.py</code>, <code>rubric_generator.py</code>, <code>rubric_judge.py</code></p>
+<hr>
+<h3 id="phase-5-integration-week-5">Phase 5: Integration (Week 5)</h3>
+<p><strong>Goal</strong>: End-to-end memory system with full rubric co-evolution</p>
+<ol start="25">
+<li>✅ Build unified <code>DenseMemory</code> interface</li>
+<li>✅ Wire rubric evolution into the post-search callback</li>
+<li>✅ Add high-level API: <code>add()</code>, <code>search()</code>, <code>update()</code>, <code>delete()</code></li>
+<li>✅ Implement rebuild logic</li>
+<li>✅ Write integration tests (including rubric evolution tests)</li>
+<li>✅ Performance benchmarking</li>
+</ol>
+<p><strong>Deliverable</strong>: <code>memory.py</code> with complete API + rubric evolution loop</p>
+<hr>
+<h2 id="4-phase-1-encoding-engine">4. Phase 1: Encoding Engine</h2>
+<p><em>This phase is unchanged from the base plan. The encoder has no direct rubric dependency — rubrics operate at the search and scoring layer, not the embedding layer. However, the encoder is used to embed rubric criteria themselves when you want approximate rubric matching (see Phase 4).</em></p>
+<h3 id="practice-1-unified-encoder-not-separate-doc-query">Practice 1: Unified Encoder (Not Separate Doc/Query)</h3>
+<p><strong>PySerini pattern</strong>: Separate <code>DocumentEncoder</code> and <code>QueryEncoder</code> classes</p>
+<p><strong>Better approach</strong>: Single encoder with role flag</p>
+<p><strong>Reason</strong>:</p>
+<ul>
+<li>Same model for both (sentence-transformers, BGE, etc.)</li>
+<li>Same pooling/normalization settings</li>
+<li>Simpler to maintain</li>
+<li>Less code duplication</li>
+</ul>
+<p><strong>What to build</strong>:</p>
+<pre><code class="language-python">class DenseEncoder:
+    def __init__(self, model_name: str, device: str = &#39;cuda:0&#39;):
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        self.model = AutoModel.from_pretrained(model_name).to(device)
+        self.model.eval()
+        self.device = device
+        self.dimension = self.model.config.hidden_size
+
+    def encode(self, texts: list[str] | str, batch_size: int = 32) -&gt; np.ndarray:
+        &quot;&quot;&quot;
+        Encode texts to L2-normalized vectors.
+        Handles both single strings and lists.
+        Returns: np.ndarray of shape (N, D), dtype float32
+        &quot;&quot;&quot;
+        if isinstance(texts, str):
+            texts = [texts]
+
+        all_embeddings = []
+
+        for i in range(0, len(texts), batch_size):
+            batch = texts[i : i + batch_size]
+            inputs = self.tokenizer(
+                batch,
+                padding=True,
+                truncation=True,
+                max_length=512,
+                return_tensors=&#39;pt&#39;
+            )
+            inputs = {k: v.to(self.device) for k, v in inputs.items()}
+
+            with torch.no_grad():
+                outputs = self.model(**inputs)
+
+            embeddings = self._mean_pool(
+                outputs.last_hidden_state,
+                inputs[&#39;attention_mask&#39;]
+            )
+            embeddings = embeddings.cpu().numpy().astype(&#39;float32&#39;)
+            embeddings = self._normalize(embeddings)
+            all_embeddings.append(embeddings)
+
+        return np.vstack(all_embeddings)
+</code></pre>
+<p><strong>Key decisions</strong>:</p>
+<ul>
+<li><strong>Model choice</strong>: <code>BAAI/bge-m3</code> (strong multilingual, 1024-dim) or <code>sentence-transformers/all-MiniLM-L6-v2</code> (fast, 384-dim)</li>
+<li><strong>Pooling</strong>: Mean pooling for sentence-transformers models</li>
+<li><strong>Normalize</strong>: Always <code>True</code> (for cosine similarity with <code>IndexFlatIP</code>)</li>
+<li><strong>Batch size</strong>: 32–64 for memory efficiency</li>
+</ul>
+<hr>
+<h3 id="practice-4-batching-for-encoding">Practice 4: Batching for Encoding</h3>
+<pre><code class="language-python">def encode_batch(self, texts: list[str], batch_size: int = 32) -&gt; np.ndarray:
+    all_embeddings = []
+
+    for i in range(0, len(texts), batch_size):
+        batch = texts[i : i + batch_size]
+
+        inputs = self.tokenizer(
+            batch,
+            padding=True,       # Pad to longest in batch only
+            truncation=True,
+            max_length=512,
+            return_tensors=&#39;pt&#39;
+        )
+        inputs = {k: v.to(self.device) for k, v in inputs.items()}
+
+        with torch.no_grad():   # No gradients needed — inference only
+            outputs = self.model(**inputs)
+
+        embeddings = self._mean_pool(
+            outputs.last_hidden_state,
+            inputs[&#39;attention_mask&#39;]
+        )
+        all_embeddings.append(embeddings.cpu().numpy().astype(&#39;float32&#39;))
+
+    return np.vstack(all_embeddings)
+</code></pre>
+<hr>
+<h3 id="practice-5-pooling-implementation">Practice 5: Pooling Implementation</h3>
+<p><strong>Mean pooling</strong> (recommended for sentence-transformers):</p>
+<pre><code class="language-python">def _mean_pool(
+    self,
+    last_hidden_state: torch.Tensor,   # (batch, seq_len, hidden_dim)
+    attention_mask: torch.Tensor       # (batch, seq_len)
+) -&gt; torch.Tensor:
+    # Expand mask to match hidden state dimensions
+    mask_expanded = (
+        attention_mask
+        .unsqueeze(-1)
+        .expand(last_hidden_state.size())
+        .float()
+    )
+    # Zero out padding positions
+    masked = last_hidden_state * mask_expanded
+    # Sum over sequence, then average over non-padding tokens
+    sum_emb = torch.sum(masked, dim=1)
+    sum_mask = torch.clamp(mask_expanded.sum(dim=1), min=1e-9)
+    return sum_emb / sum_mask
+</code></pre>
+<p><strong>CLS pooling</strong> (for BERT-style models):</p>
+<pre><code class="language-python">def _cls_pool(self, last_hidden_state: torch.Tensor) -&gt; torch.Tensor:
+    return last_hidden_state[:, 0, :]
+</code></pre>
+<hr>
+<h3 id="practice-6-l2-normalization">Practice 6: L2 Normalization</h3>
+<pre><code class="language-python">def _normalize(self, embeddings: np.ndarray) -&gt; np.ndarray:
+    norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
+    return embeddings / np.maximum(norms, 1e-9)
+</code></pre>
+<p><strong>Verify</strong>:</p>
+<pre><code class="language-python">norms = np.linalg.norm(normalized, axis=1)
+assert np.allclose(norms, 1.0), &quot;Normalization failed!&quot;
+</code></pre>
+<p>After normalization, inner product (<code>IndexFlatIP</code>) equals cosine similarity. This is required for FAISS cosine search.</p>
+<hr>
+<h2 id="5-phase-2-storage-indexing">5. Phase 2: Storage &amp; Indexing</h2>
+<p><em>The original storage design is extended with a rubric buffer table in the same SQLite database. FAISS stores vectors only. SQLite stores two things: (1) memory metadata, (2) the rubric buffer — both persistent and active rubric sets per query/session.</em></p>
+<h3 id="practice-2a-faiss-index-wrapper">Practice 2A: FAISS Index Wrapper</h3>
+<pre><code class="language-python">import faiss
+import numpy as np
+
+class DenseVectorIndex:
+    &quot;&quot;&quot;
+    Wraps a FAISS index with docid mapping.
+    FAISS knows nothing about metadata or rubrics — that stays in SQLite.
+    &quot;&quot;&quot;
+
+    def __init__(self, dimension: int = 384, index_type: str = &#39;flat&#39;):
+        self.dimension = dimension
+        self.docids: list[str] = []
+        self.index = self._create_index(index_type)
+
+    def _create_index(self, index_type: str):
+        if index_type == &#39;flat&#39;:
+            return faiss.IndexFlatIP(self.dimension)
+        elif index_type == &#39;hnsw&#39;:
+            idx = faiss.IndexHNSWFlat(self.dimension, 32)  # M=32
+            idx.hnsw.efConstruction = 40
+            return idx
+        else:
+            raise ValueError(f&quot;Unknown index type: {index_type}&quot;)
+
+    def add(self, vectors: np.ndarray, doc_ids: list[str]):
+        &quot;&quot;&quot;Add vectors with their string IDs.&quot;&quot;&quot;
+        assert vectors.shape[1] == self.dimension, &quot;Dimension mismatch&quot;
+        vectors = vectors.astype(&#39;float32&#39;)
+        self.index.add(vectors)
+        self.docids.extend(doc_ids)
+
+    def search(self, query_vec: np.ndarray, k: int = 50) -&gt; list[dict]:
+        &quot;&quot;&quot;
+        Raw KNN search — returns candidates for rubric re-ranking.
+        Deliberately over-retrieves (default k=50) to give rubric layer headroom.
+        &quot;&quot;&quot;
+        if query_vec.ndim == 1:
+            query_vec = query_vec.reshape(1, -1)
+        query_vec = query_vec.astype(&#39;float32&#39;)
+
+        scores, indices = self.index.search(query_vec, k)
+
+        results = []
+        for score, idx in zip(scores.flat, indices.flat):
+            if idx &gt;= 0:
+                results.append({
+                    &#39;id&#39;: self.docids[idx],
+                    &#39;embedding_score&#39;: float(score)
+                })
+        return results
+
+    def save(self, path: str):
+        faiss.write_index(self.index, f&#39;{path}/index.faiss&#39;)
+        with open(f&#39;{path}/docids.txt&#39;, &#39;w&#39;) as f:
+            for doc_id in self.docids:
+                f.write(f&#39;{doc_id}\n&#39;)
+
+    def load(self, path: str):
+        self.index = faiss.read_index(f&#39;{path}/index.faiss&#39;)
+        with open(f&#39;{path}/docids.txt&#39;, &#39;r&#39;) as f:
+            self.docids = [line.strip() for line in f]
+        assert len(self.docids) == self.index.ntotal
+</code></pre>
+<hr>
+<h3 id="practice-2b-8-metadata-store-with-rubric-buffer-tables-extended">Practice 2B &amp; 8: Metadata Store with Rubric Buffer Tables (EXTENDED)</h3>
+<p>This is where the rubric layer gets its persistent storage. The SQLite database now has <strong>three tables</strong>:</p>
+<ol>
+<li><code>memories</code> — existing memory records</li>
+<li><code>rubric_buffer_persistent</code> — initial search-grounded rubrics (never deleted) ← NEW</li>
+<li><code>rubric_buffer_active</code> — evolving session/query rubrics (pruned by variance) ← NEW</li>
+</ol>
+<pre><code class="language-python">import sqlite3
+import json
+import datetime
+from typing import Optional
+
+class DenseMetadataStore:
+    &quot;&quot;&quot;
+    SQLite-backed store for:
+    - Memory metadata (text, user, session, timestamps, importance, etc.)
+    - Persistent rubric buffer (initial search-grounded criteria per query)
+    - Active rubric buffer (session-evolving criteria, pruned by variance)
+    &quot;&quot;&quot;
+
+    def __init__(self, db_path: str = &#39;memory.db&#39;):
+        self.db_path = db_path
+        self.conn = sqlite3.connect(db_path, check_same_thread=False)
+        self._create_tables()
+
+    def _create_tables(self):
+        cursor = self.conn.cursor()
+
+        # ── Original memory metadata table ──────────────────────────────────
+        cursor.execute(&quot;&quot;&quot;
+            CREATE TABLE IF NOT EXISTS memories (
+                id           TEXT PRIMARY KEY,
+                text         TEXT NOT NULL,
+                user_id      TEXT,
+                session_id   TEXT,
+                timestamp    DATETIME DEFAULT CURRENT_TIMESTAMP,
+                memory_type  TEXT DEFAULT &#39;general&#39;,
+                importance   REAL DEFAULT 0.5,
+                access_count INTEGER DEFAULT 0,
+                last_accessed DATE,
+                tags         TEXT,       -- JSON array
+                source       TEXT DEFAULT &#39;conversation&#39;
+            )
+        &quot;&quot;&quot;)
+        cursor.execute(&quot;CREATE INDEX IF NOT EXISTS idx_user ON memories(user_id)&quot;)
+        cursor.execute(&quot;CREATE INDEX IF NOT EXISTS idx_session ON memories(session_id)&quot;)
+
+        # ── NEW: Persistent rubric buffer ────────────────────────────────────
+        # One row per (query_key, rubric). query_key is a stable hash of the query.
+        # These are generated ONCE from initial search and never deleted.
+        cursor.execute(&quot;&quot;&quot;
+            CREATE TABLE IF NOT EXISTS rubric_buffer_persistent (
+                id           TEXT PRIMARY KEY,   -- UUID
+                query_key    TEXT NOT NULL,       -- hash of query string
+                query_text   TEXT,               -- original query (for debugging)
+                rubric_text  TEXT NOT NULL,       -- the criterion itself
+                weight       REAL DEFAULT 1.0,   -- positive or negative
+                rubric_type  TEXT DEFAULT &#39;positive&#39;,  -- &#39;positive&#39; or &#39;negative&#39;
+                created_at   DATETIME DEFAULT CURRENT_TIMESTAMP
+            )
+        &quot;&quot;&quot;)
+        cursor.execute(
+            &quot;CREATE INDEX IF NOT EXISTS idx_persist_qk &quot;
+            &quot;ON rubric_buffer_persistent(query_key)&quot;
+        )
+
+        # ── NEW: Active (evolving) rubric buffer ─────────────────────────────
+        # Generated at each retrieval cycle by contrasting used vs. unused memories.
+        # Pruned by variance — rubrics that stop discriminating are deleted.
+        cursor.execute(&quot;&quot;&quot;
+            CREATE TABLE IF NOT EXISTS rubric_buffer_active (
+                id               TEXT PRIMARY KEY,
+                query_key        TEXT,          -- NULL means session-wide rubric
+                session_id       TEXT,          -- session scope
+                rubric_text      TEXT NOT NULL,
+                weight           REAL DEFAULT 1.0,
+                rubric_type      TEXT DEFAULT &#39;positive&#39;,
+                step_created     INTEGER,       -- training/session step when created
+                last_variance    REAL,          -- most recent std across retrievals
+                usage_count      INTEGER DEFAULT 0,
+                created_at       DATETIME DEFAULT CURRENT_TIMESTAMP,
+                last_updated     DATETIME DEFAULT CURRENT_TIMESTAMP
+            )
+        &quot;&quot;&quot;)
+        cursor.execute(
+            &quot;CREATE INDEX IF NOT EXISTS idx_active_qk &quot;
+            &quot;ON rubric_buffer_active(query_key)&quot;
+        )
+        cursor.execute(
+            &quot;CREATE INDEX IF NOT EXISTS idx_active_sess &quot;
+            &quot;ON rubric_buffer_active(session_id)&quot;
+        )
+
+        self.conn.commit()
+
+    # ── Memory CRUD ──────────────────────────────────────────────────────────
+
+    def add_memory(
+        self,
+        doc_id: str,
+        text: str,
+        user_id: Optional[str] = None,
+        session_id: Optional[str] = None,
+        memory_type: str = &#39;general&#39;,
+        importance: float = 0.5,
+        tags: Optional[list] = None,
+        source: str = &#39;conversation&#39;
+    ):
+        self.conn.execute(&quot;&quot;&quot;
+            INSERT OR REPLACE INTO memories
+                (id, text, user_id, session_id, memory_type,
+                 importance, tags, source)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        &quot;&quot;&quot;, (
+            doc_id, text, user_id, session_id, memory_type,
+            importance, json.dumps(tags or []), source
+        ))
+        self.conn.commit()
+
+    def get_memory(self, doc_id: str) -&gt; Optional[dict]:
+        row = self.conn.execute(
+            &quot;SELECT * FROM memories WHERE id = ?&quot;, (doc_id,)
+        ).fetchone()
+        if row:
+            cols = [d[0] for d in self.conn.execute(
+                &quot;SELECT * FROM memories LIMIT 0&quot;
+            ).description]
+            return dict(zip(cols, row))
+        return None
+
+    def batch_get_memories(self, doc_ids: list[str]) -&gt; list[dict]:
+        placeholders = &#39;,&#39;.join([&#39;?&#39;] * len(doc_ids))
+        rows = self.conn.execute(
+            f&quot;SELECT * FROM memories WHERE id IN ({placeholders})&quot;, doc_ids
+        ).fetchall()
+        cols = [d[0] for d in self.conn.execute(
+            &quot;SELECT * FROM memories LIMIT 0&quot;
+        ).description]
+        return [dict(zip(cols, row)) for row in rows]
+
+    def update_access(self, doc_id: str):
+        self.conn.execute(&quot;&quot;&quot;
+            UPDATE memories
+            SET access_count = access_count + 1,
+                last_accessed = CURRENT_DATE
+            WHERE id = ?
+        &quot;&quot;&quot;, (doc_id,))
+        self.conn.commit()
+
+    # ── Persistent Rubric Buffer CRUD ─────────────────────────────────────
+
+    def add_persistent_rubric(
+        self,
+        rubric_id: str,
+        query_key: str,
+        query_text: str,
+        rubric_text: str,
+        weight: float = 1.0,
+        rubric_type: str = &#39;positive&#39;
+    ):
+        self.conn.execute(&quot;&quot;&quot;
+            INSERT OR IGNORE INTO rubric_buffer_persistent
+                (id, query_key, query_text, rubric_text, weight, rubric_type)
+            VALUES (?, ?, ?, ?, ?, ?)
+        &quot;&quot;&quot;, (rubric_id, query_key, query_text, rubric_text, weight, rubric_type))
+        self.conn.commit()
+
+    def get_persistent_rubrics(self, query_key: str) -&gt; list[dict]:
+        rows = self.conn.execute(
+            &quot;SELECT * FROM rubric_buffer_persistent WHERE query_key = ?&quot;,
+            (query_key,)
+        ).fetchall()
+        cols = [d[0] for d in self.conn.execute(
+            &quot;SELECT * FROM rubric_buffer_persistent LIMIT 0&quot;
+        ).description]
+        return [dict(zip(cols, row)) for row in rows]
+
+    # ── Active (Evolving) Rubric Buffer CRUD ──────────────────────────────
+
+    def add_active_rubric(
+        self,
+        rubric_id: str,
+        rubric_text: str,
+        weight: float = 1.0,
+        rubric_type: str = &#39;positive&#39;,
+        query_key: Optional[str] = None,
+        session_id: Optional[str] = None,
+        step_created: int = 0
+    ):
+        self.conn.execute(&quot;&quot;&quot;
+            INSERT INTO rubric_buffer_active
+                (id, query_key, session_id, rubric_text, weight,
+                 rubric_type, step_created)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        &quot;&quot;&quot;, (
+            rubric_id, query_key, session_id, rubric_text,
+            weight, rubric_type, step_created
+        ))
+        self.conn.commit()
+
+    def get_active_rubrics(
+        self,
+        query_key: Optional[str] = None,
+        session_id: Optional[str] = None
+    ) -&gt; list[dict]:
+        &quot;&quot;&quot;Retrieve active rubrics by query key and/or session ID.&quot;&quot;&quot;
+        if query_key and session_id:
+            rows = self.conn.execute(
+                &quot;SELECT * FROM rubric_buffer_active &quot;
+                &quot;WHERE query_key = ? OR session_id = ?&quot;,
+                (query_key, session_id)
+            ).fetchall()
+        elif query_key:
+            rows = self.conn.execute(
+                &quot;SELECT * FROM rubric_buffer_active WHERE query_key = ?&quot;,
+                (query_key,)
+            ).fetchall()
+        elif session_id:
+            rows = self.conn.execute(
+                &quot;SELECT * FROM rubric_buffer_active WHERE session_id = ?&quot;,
+                (session_id,)
+            ).fetchall()
+        else:
+            rows = []
+
+        cols = [d[0] for d in self.conn.execute(
+            &quot;SELECT * FROM rubric_buffer_active LIMIT 0&quot;
+        ).description]
+        return [dict(zip(cols, row)) for row in rows]
+
+    def update_active_rubric_variance(self, rubric_id: str, variance: float):
+        self.conn.execute(&quot;&quot;&quot;
+            UPDATE rubric_buffer_active
+            SET last_variance = ?,
+                usage_count = usage_count + 1,
+                last_updated = CURRENT_TIMESTAMP
+            WHERE id = ?
+        &quot;&quot;&quot;, (variance, rubric_id))
+        self.conn.commit()
+
+    def delete_active_rubric(self, rubric_id: str):
+        self.conn.execute(
+            &quot;DELETE FROM rubric_buffer_active WHERE id = ?&quot;,
+            (rubric_id,)
+        )
+        self.conn.commit()
+
+    def prune_active_rubrics(
+        self,
+        query_key: Optional[str],
+        session_id: Optional[str],
+        k_max: int = 10
+    ):
+        &quot;&quot;&quot;
+        Variance-based pruning (RLER §3.2):
+        1. Delete rubrics with last_variance = 0 (non-discriminative)
+        2. Keep only top k_max by last_variance descending
+        &quot;&quot;&quot;
+        # Step 1: Delete zero-variance rubrics
+        if query_key:
+            self.conn.execute(&quot;&quot;&quot;
+                DELETE FROM rubric_buffer_active
+                WHERE query_key = ?
+                  AND last_variance IS NOT NULL
+                  AND last_variance = 0.0
+            &quot;&quot;&quot;, (query_key,))
+        if session_id:
+            self.conn.execute(&quot;&quot;&quot;
+                DELETE FROM rubric_buffer_active
+                WHERE session_id = ?
+                  AND last_variance IS NOT NULL
+                  AND last_variance = 0.0
+            &quot;&quot;&quot;, (session_id,))
+
+        # Step 2: Keep only top K_max by variance
+        # Get all IDs sorted by variance desc
+        rows = self.conn.execute(&quot;&quot;&quot;
+            SELECT id FROM rubric_buffer_active
+            WHERE (query_key = ? OR session_id = ?)
+            ORDER BY COALESCE(last_variance, 0) DESC
+        &quot;&quot;&quot;, (query_key or &#39;&#39;, session_id or &#39;&#39;)).fetchall()
+
+        all_ids = [row[0] for row in rows]
+        ids_to_delete = all_ids[k_max:]   # Keep top k_max, delete the rest
+
+        if ids_to_delete:
+            placeholders = &#39;,&#39;.join([&#39;?&#39;] * len(ids_to_delete))
+            self.conn.execute(
+                f&quot;DELETE FROM rubric_buffer_active WHERE id IN ({placeholders})&quot;,
+                ids_to_delete
+            )
+
+        self.conn.commit()
+</code></pre>
+<hr>
+<h3 id="practice-3-incremental-updates-strategy">Practice 3: Incremental Updates Strategy</h3>
+<p><em>Unchanged from base plan. The FAISS index does not support efficient deletion. Two options:</em></p>
+<p><strong>Option A: Periodic Rebuild</strong> (recommended for &lt;500k memories)</p>
+<pre><code class="language-python">def rebuild_index(self):
+    all_memories = self.metadata_store.get_all_memories()
+    texts = [m[&#39;text&#39;] for m in all_memories]
+    ids   = [m[&#39;id&#39;]   for m in all_memories]
+
+    vectors = self.encoder.encode(texts, batch_size=64)
+    self.vector_index = DenseVectorIndex(
+        dimension=self.encoder.dimension,
+        index_type=&#39;hnsw&#39; if len(texts) &gt; 10_000 else &#39;flat&#39;
+    )
+    self.vector_index.add(vectors, ids)
+</code></pre>
+<p><strong>Option B: IndexIDMap</strong> (for large-scale with frequent deletes)</p>
+<pre><code class="language-python">base_index = faiss.IndexFlatIP(dimension)
+index = faiss.IndexIDMap(base_index)
+index.add_with_ids(vectors, np.array(numeric_ids))
+index.remove_ids(np.array([id_to_remove]))
+</code></pre>
+<hr>
+<h3 id="practice-7-faiss-index-selection-logic">Practice 7: FAISS Index Selection Logic</h3>
+<pre><code class="language-python">def select_index_type(num_vectors: int) -&gt; str:
+    if num_vectors &lt; 10_000:
+        return &#39;flat&#39;      # IndexFlatIP — exact search
+    elif num_vectors &lt; 1_000_000:
+        return &#39;hnsw&#39;      # IndexHNSWFlat — fast approximate
+    else:
+        return &#39;ivf&#39;       # IndexIVFFlat — large-scale approximate
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Index Type</th>
+<th>Vectors</th>
+<th>Recall</th>
+<th>Speed</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>IndexFlatIP</code></td>
+<td>&lt;10k</td>
+<td>100%</td>
+<td>Slow at scale</td>
+<td>Exact, best for dev</td>
+</tr>
+<tr>
+<td><code>IndexHNSWFlat</code></td>
+<td>&lt;1M</td>
+<td>~98%</td>
+<td>Fast</td>
+<td>Production default</td>
+</tr>
+<tr>
+<td><code>IndexIVFFlat</code></td>
+<td>&gt;1M</td>
+<td>~95%</td>
+<td>Very fast</td>
+<td>Requires training</td>
+</tr>
+</tbody></table>
+<p><strong>Recommendation</strong>: Start with <code>IndexFlatIP</code>, upgrade to HNSW when &gt;10k memories.</p>
+<hr>
+<h3 id="practice-2d-save-load-complete-index">Practice 2D: Save/Load Complete Index</h3>
+<pre><code class="language-python">def save_index(self, save_dir: str):
+    os.makedirs(save_dir, exist_ok=True)
+    faiss.write_index(self.index, f&#39;{save_dir}/index.faiss&#39;)
+    with open(f&#39;{save_dir}/docids.txt&#39;, &#39;w&#39;) as f:
+        for doc_id in self.docids:
+            f.write(f&#39;{doc_id}\n&#39;)
+
+def load_index(self, load_dir: str):
+    self.index = faiss.read_index(f&#39;{load_dir}/index.faiss&#39;)
+    with open(f&#39;{load_dir}/docids.txt&#39;, &#39;r&#39;) as f:
+        self.docids = [line.strip() for line in f]
+    assert len(self.docids) == self.index.ntotal, &quot;Index/docid count mismatch&quot;
+</code></pre>
+<hr>
+<h3 id="practice-2e-upgrading-flat-to-hnsw">Practice 2E: Upgrading Flat to HNSW</h3>
+<pre><code class="language-python">def upgrade_to_hnsw(flat_index_path: str, output_path: str, M: int = 32):
+    flat = faiss.read_index(f&#39;{flat_index_path}/index.faiss&#39;)
+    vectors = flat.reconstruct_n(0, flat.ntotal)
+
+    hnsw = faiss.IndexHNSWFlat(flat.d, M)
+    hnsw.hnsw.efConstruction = 40
+    hnsw.add(vectors)
+
+    os.makedirs(output_path, exist_ok=True)
+    faiss.write_index(hnsw, f&#39;{output_path}/index.faiss&#39;)
+    shutil.copy(f&#39;{flat_index_path}/docids.txt&#39;, f&#39;{output_path}/docids.txt&#39;)
+</code></pre>
+<hr>
+<h2 id="6-phase-3-search-retrieval">6. Phase 3: Search &amp; Retrieval</h2>
+<p><em>Phase 3 is the KNN retrieval layer — it is <strong>not</strong> where rubric scoring happens. This layer is responsible for producing a set of candidate memories efficiently. The rubric layer (Phase 4) then re-ranks these candidates. This separation is intentional: KNN is fast and approximate; rubric scoring is slower but semantically precise. Over-retrieve with KNN (e.g., top-50), then re-rank down to top-k with rubrics.</em></p>
+<h3 id="practice-11-basic-search-implementation">Practice 11: Basic Search Implementation</h3>
+<pre><code class="language-python">class DenseSearch:
+    &quot;&quot;&quot;
+    KNN retrieval layer. Returns raw candidates with embedding scores.
+    Does NOT apply rubric scoring — that happens in DenseMemory.
+    &quot;&quot;&quot;
+
+    def __init__(
+        self,
+        encoder: &#39;DenseEncoder&#39;,
+        vector_index: &#39;DenseVectorIndex&#39;,
+        metadata_store: &#39;DenseMetadataStore&#39;
+    ):
+        self.encoder = encoder
+        self.vector_index = vector_index
+        self.metadata_store = metadata_store
+
+    def search_candidates(
+        self,
+        query: str,
+        candidate_k: int = 50,   # Over-retrieve for rubric re-ranking
+        user_id: Optional[str] = None,
+        filters: Optional[dict] = None
+    ) -&gt; list[dict]:
+        &quot;&quot;&quot;
+        Stage 1 of a two-stage retrieval:
+          1. KNN over FAISS → candidate_k raw candidates
+          2. (Caller applies rubric re-ranking to get final top-k)
+
+        Returns list of dicts with keys:
+          {id, text, embedding_score, metadata}
+        &quot;&quot;&quot;
+        # Encode query
+        query_vec = self.encoder.encode(query)   # (1, D)
+
+        # KNN search
+        raw_results = self.vector_index.search(query_vec, k=candidate_k)
+
+        # Hydrate with metadata + apply optional filters
+        candidates = []
+        for result in raw_results:
+            meta = self.metadata_store.get_memory(result[&#39;id&#39;])
+            if meta is None:
+                continue
+
+            # Apply user filter
+            if user_id and meta.get(&#39;user_id&#39;) != user_id:
+                continue
+
+            # Apply custom filters
+            if filters and not self._matches_filters(meta, filters):
+                continue
+
+            candidates.append({
+                &#39;id&#39;: result[&#39;id&#39;],
+                &#39;text&#39;: meta[&#39;text&#39;],
+                &#39;embedding_score&#39;: result[&#39;embedding_score&#39;],
+                &#39;metadata&#39;: meta
+            })
+
+            self.metadata_store.update_access(result[&#39;id&#39;])
+
+        return candidates
+
+    def _matches_filters(self, meta: dict, filters: dict) -&gt; bool:
+        for key, value in filters.items():
+            if isinstance(value, list):
+                if meta.get(key) not in value:
+                    return False
+            else:
+                if meta.get(key) != value:
+                    return False
+        return True
+</code></pre>
+<hr>
+<h3 id="practice-12-batch-search-optimization">Practice 12: Batch Search Optimization</h3>
+<pre><code class="language-python">def batch_search_candidates(
+    self,
+    queries: list[str],
+    candidate_k: int = 50
+) -&gt; dict[int, list[dict]]:
+    &quot;&quot;&quot;Encode all queries at once, then batch-search FAISS.&quot;&quot;&quot;
+    query_vecs = self.encoder.encode(queries).astype(&#39;float32&#39;)  # (Q, D)
+
+    all_scores, all_indices = self.vector_index.index.search(
+        query_vecs, candidate_k
+    )
+
+    results = {}
+    for i, query in enumerate(queries):
+        results[i] = [
+            {
+                &#39;id&#39;: self.vector_index.docids[idx],
+                &#39;embedding_score&#39;: float(score)
+            }
+            for score, idx in zip(all_scores[i], all_indices[i])
+            if idx &gt;= 0
+        ]
+    return results
+</code></pre>
+<hr>
+<h3 id="practice-13-hnsw-search-quality-tuning">Practice 13: HNSW Search Quality Tuning</h3>
+<pre><code class="language-python">def set_search_quality(self, quality: str = &#39;balanced&#39;):
+    &quot;&quot;&quot;Adjust HNSW efSearch parameter.&quot;&quot;&quot;
+    if not hasattr(self.vector_index.index, &#39;hnsw&#39;):
+        return  # Flat index — search is always exact
+
+    quality_map = {&#39;fast&#39;: 16, &#39;balanced&#39;: 64, &#39;accurate&#39;: 256}
+    ef = quality_map.get(quality, 64)
+    self.vector_index.index.hnsw.efSearch = ef
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>efSearch</th>
+<th>Recall</th>
+<th>Speed</th>
+<th>Recommended for</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>16</td>
+<td>~95%</td>
+<td>Fast</td>
+<td>Interactive, low-latency</td>
+</tr>
+<tr>
+<td>64</td>
+<td>~98%</td>
+<td>Medium</td>
+<td>Production default</td>
+</tr>
+<tr>
+<td>256</td>
+<td>~99.5%</td>
+<td>Slow</td>
+<td>High-precision needs</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="practice-14-thread-control">Practice 14: Thread Control</h3>
+<pre><code class="language-python">def search_candidates(self, query: str, candidate_k: int = 50, threads: int = 1):
+    faiss.omp_set_num_threads(threads)
+    # ... rest of search
+</code></pre>
+<ul>
+<li><code>threads=1</code>: Reproducible, safe for concurrent queries</li>
+<li><code>threads=4</code>: Single query, multi-core CPU</li>
+<li><code>threads=max</code>: Batch offline processing</li>
+</ul>
+<hr>
+<h3 id="practice-15-result-deduplication">Practice 15: Result Deduplication</h3>
+<pre><code class="language-python">def deduplicate(self, results: list[dict], k: int) -&gt; list[dict]:
+    seen = set()
+    deduped = []
+    for r in results:
+        if r[&#39;id&#39;] not in seen:
+            seen.add(r[&#39;id&#39;])
+            deduped.append(r)
+        if len(deduped) &gt;= k:
+            break
+    return deduped
+</code></pre>
+<p><strong>Pattern</strong>: Always search for <code>3x</code> to <code>5x</code> more than <code>k</code>, then deduplicate down. This is especially important when the same memory appears multiple times under different representations.</p>
+<hr>
+<h3 id="practice-16-score-normalization">Practice 16: Score Normalization</h3>
+<pre><code class="language-python">def normalize_scores(self, results: list[dict]) -&gt; list[dict]:
+    &quot;&quot;&quot;Map embedding scores from [-1,1] (IP) to [0,1].&quot;&quot;&quot;
+    for r in results:
+        r[&#39;embedding_score_normalized&#39;] = (r[&#39;embedding_score&#39;] + 1) / 2
+    return results
+</code></pre>
+<p>After normalization, embedding scores and rubric scores are both in <code>[0, 1]</code>, making the hybrid weighting formula meaningful.</p>
+<hr>
+<h2 id="7-phase-4-evolving-rubric-system">7. Phase 4: Evolving Rubric System</h2>
+<p><em>This is the new phase. Three components: <code>RubricJudge</code>, <code>RubricGenerator</code>, and <code>RubricBuffer</code>. Each maps directly to a component in RLER&#39;s training architecture, adapted for retrieval rather than policy training.</em></p>
+<h3 id="conceptual-mapping-rler-memory-system">Conceptual Mapping: RLER → Memory System</h3>
+<table>
+<thead>
+<tr>
+<th>RLER Component</th>
+<th>Memory System Equivalent</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Policy rollouts <code>y₁...y_G</code></td>
+<td>Candidate memories returned by KNN</td>
+</tr>
+<tr>
+<td><code>JUDGE(r_k, y_i)</code></td>
+<td><code>RubricJudge.score(r_k, memory_i)</code></td>
+</tr>
+<tr>
+<td><code>G_rubric</code> (rubric generator)</td>
+<td><code>RubricGenerator.generate_from_contrast()</code></td>
+</tr>
+<tr>
+<td>Persistent rubrics <code>R^persist</code></td>
+<td>Archetype-weight rubrics (your 8-factor system)</td>
+</tr>
+<tr>
+<td>Active rubrics <code>R^active</code></td>
+<td>Session-evolving rubrics from used/unused contrast</td>
+</tr>
+<tr>
+<td><code>std(r_k) = 0 → retire</code></td>
+<td>Same rule: prune non-discriminating rubrics</td>
+</tr>
+<tr>
+<td>GRPO advantage signal</td>
+<td>Hybrid score adjustment (rubric re-ranking)</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="component-a-rubricjudge">Component A: RubricJudge</h3>
+<pre><code class="language-python">import hashlib
+import json
+import diskcache
+
+class RubricJudge:
+    &quot;&quot;&quot;
+    JUDGE(r_k, m): Scores a retrieved memory m against rubric criterion r_k.
+    Returns {0.0, 0.5, 1.0}.
+
+    Critical design choice: results are CACHED.
+    A memory&#39;s content doesn&#39;t change, so JUDGE(r_k, m) is deterministic.
+    Caching eliminates redundant API calls when the same memory appears
+    across multiple retrieval cycles.
+    &quot;&quot;&quot;
+
+    def __init__(
+        self,
+        llm_client,          # OpenAI or Anthropic client
+        model: str = &#39;gpt-4.1-mini&#39;,
+        cache_dir: str = &#39;.rubric_judge_cache&#39;
+    ):
+        self.llm = llm_client
+        self.model = model
+        self.cache = diskcache.Cache(cache_dir)
+
+    def score(
+        self,
+        rubric_text: str,
+        memory_text: str,
+        query_text: str
+    ) -&gt; float:
+        &quot;&quot;&quot;
+        Score how well memory_text satisfies rubric_text given query_text.
+
+        Cache key: hash(rubric_text + memory_text)
+        Note: query_text is excluded from cache key because the rubric
+        already encodes query-specific expectations. The same memory
+        satisfies or doesn&#39;t satisfy a rubric regardless of how it
+        was queried — the rubric is the query-aware component.
+        &quot;&quot;&quot;
+        cache_key = hashlib.md5(
+            f&quot;{rubric_text}|||{memory_text}&quot;.encode()
+        ).hexdigest()
+
+        if cache_key in self.cache:
+            return self.cache[cache_key]
+
+        prompt = self._build_judge_prompt(rubric_text, memory_text, query_text)
+
+        response = self.llm.chat.completions.create(
+            model=self.model,
+            messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: prompt}],
+            temperature=0.0,   # Deterministic judging
+            response_format={&quot;type&quot;: &quot;json_object&quot;}
+        )
+
+        raw = json.loads(response.choices[0].message.content)
+        # Paper uses 0-2 scale internally, divide by 2 → {0.0, 0.5, 1.0}
+        score = float(raw.get(&#39;score&#39;, 0)) / 2.0
+        score = max(0.0, min(1.0, score))  # Clamp to [0, 1]
+
+        self.cache[cache_key] = score
+        return score
+
+    def score_batch(
+        self,
+        rubric_text: str,
+        memories: list[dict],
+        query_text: str
+    ) -&gt; list[float]:
+        &quot;&quot;&quot;Score multiple memories against the same rubric.&quot;&quot;&quot;
+        return [
+            self.score(rubric_text, m[&#39;text&#39;], query_text)
+            for m in memories
+        ]
+
+    def _build_judge_prompt(
+        self,
+        rubric_text: str,
+        memory_text: str,
+        query_text: str
+    ) -&gt; str:
+        return f&quot;&quot;&quot;You are evaluating whether a retrieved memory satisfies a quality criterion.
+
+Query context: {query_text}
+
+Retrieved memory: {memory_text}
+
+Criterion: {rubric_text}
+
+Score how well the memory satisfies this criterion.
+Return JSON: {{&quot;score&quot;: X}} where X is:
+- 0  = Does not satisfy the criterion at all
+- 1  = Partially satisfies the criterion
+- 2  = Fully satisfies the criterion
+
+Only return the JSON object, nothing else.&quot;&quot;&quot;
+</code></pre>
+<hr>
+<h3 id="component-b-rubricgenerator">Component B: RubricGenerator</h3>
+<pre><code class="language-python">class RubricGenerator:
+    &quot;&quot;&quot;
+    G_rubric: Generates new rubric criteria by contrasting used vs. unused
+    memories from a retrieval cycle.
+
+    This is the &quot;evolving&quot; in Evolving Rubrics.
+
+    Mirrors RLER §3.2: &quot;positive rubrics capture strengths or new relevant
+    knowledge; negative rubrics summarize common undesirable behaviors.&quot;
+
+    In the memory context:
+    - Positive: What property made USED memories actually useful?
+    - Negative: What property made UNUSED memories a waste of retrieval budget?
+    &quot;&quot;&quot;
+
+    def __init__(
+        self,
+        llm_client,
+        model: str = &#39;gpt-4.1&#39;,   # Stronger model for generation
+        max_rubrics_per_cycle: int = 3
+    ):
+        self.llm = llm_client
+        self.model = model
+        self.max_rubrics = max_rubrics_per_cycle
+
+    def generate_initial_rubrics(
+        self,
+        query_text: str,
+        sample_memories: list[dict]
+    ) -&gt; list[dict]:
+        &quot;&quot;&quot;
+        Called ONCE per query before the first retrieval cycle.
+        Generates persistent search-grounded rubrics.
+
+        Unlike RLER which uses web search for grounding, here we use a
+        sample of existing memories to generate concrete, assertive criteria.
+        This is the &#39;Initial Search-based Rubrics&#39; from the paper.
+        &quot;&quot;&quot;
+        memory_samples = &quot;\n&quot;.join([
+            f&quot;Memory {i+1}: {m[&#39;text&#39;]}&quot;
+            for i, m in enumerate(sample_memories[:10])
+        ])
+
+        prompt = f&quot;&quot;&quot;You are designing retrieval quality criteria for a memory system.
+
+Query: {query_text}
+
+Sample memories available in the system:
+{memory_samples}
+
+Generate {self.max_rubrics} specific, assertive criteria that a HIGHLY RELEVANT
+retrieved memory should satisfy for this query.
+
+Requirements:
+- Be CONCRETE: &quot;The memory mentions the user&#39;s preference for X&quot; not &quot;The memory is relevant&quot;
+- Be TESTABLE: Another evaluator should reach the same pass/fail decision
+- Be SPECIFIC to this query, not generic
+
+Return JSON:
+{{
+    &quot;positive_rubrics&quot;: [
+        {{&quot;text&quot;: &quot;...&quot;, &quot;weight&quot;: 1.0}},
+        ...
+    ]
+}}&quot;&quot;&quot;
+
+        response = self.llm.chat.completions.create(
+            model=self.model,
+            messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: prompt}],
+            temperature=0.3,
+            response_format={&quot;type&quot;: &quot;json_object&quot;}
+        )
+
+        raw = json.loads(response.choices[0].message.content)
+        return raw.get(&#39;positive_rubrics&#39;, [])
+
+    def generate_evolving_rubrics(
+        self,
+        query_text: str,
+        used_memories: list[dict],       # Memories the agent cited/used
+        unused_memories: list[dict],     # Memories retrieved but ignored
+        existing_rubrics: list[dict],    # Current buffer (to avoid duplicates)
+        step: int = 0
+    ) -&gt; list[dict]:
+        &quot;&quot;&quot;
+        Called after each retrieval cycle where there is a contrast between
+        used and unused memories.
+
+        This is the core RLER evolving rubric generation step, applied to
+        memory retrieval instead of LM rollouts.
+
+        If len(used_memories) == 0 or len(unused_memories) == 0:
+          No contrast available — return empty list. Do not generate rubrics
+          from a single group, as they would have no discriminative power.
+        &quot;&quot;&quot;
+        if not used_memories or not unused_memories:
+            return []
+
+        used_texts = &quot;\n&quot;.join([
+            f&quot;USED {i+1}: {m[&#39;text&#39;]}&quot;
+            for i, m in enumerate(used_memories[:5])
+        ])
+        unused_texts = &quot;\n&quot;.join([
+            f&quot;UNUSED {i+1}: {m[&#39;text&#39;]}&quot;
+            for i, m in enumerate(unused_memories[:5])
+        ])
+        existing_rubric_texts = &quot;\n&quot;.join([
+            f&quot;- {r[&#39;rubric_text&#39;]}&quot;
+            for r in existing_rubrics[:15]
+        ])
+
+        prompt = f&quot;&quot;&quot;You are analyzing a memory retrieval session to generate discriminative criteria.
+
+Query: {query_text}
+
+Memories that were USED (cited, built upon, or referenced in the agent&#39;s response):
+{used_texts}
+
+Memories that were retrieved but NOT USED (ignored by the agent):
+{unused_texts}
+
+Existing criteria (DO NOT duplicate these):
+{existing_rubric_texts}
+
+Task: Identify NEW criteria that DISCRIMINATE between used and unused memories.
+- Positive criteria: What property do USED memories have that unused ones lack?
+- Negative criteria: What failure mode appears in UNUSED memories?
+
+Requirements:
+- Each criterion must be testable against a single memory in isolation
+- Be ASSERTIVE: state exactly what should be present (&quot;mentions X&quot;) not vague (&quot;is relevant&quot;)
+- Generate ONLY criteria that would score DIFFERENTLY across the shown memories
+- If no new discriminating criteria exist beyond what&#39;s already listed, return empty lists
+
+Return JSON (max {self.max_rubrics} total):
+{{
+    &quot;positive_rubrics&quot;: [{{&quot;text&quot;: &quot;...&quot;, &quot;weight&quot;: 1.0}}],
+    &quot;negative_rubrics&quot;: [{{&quot;text&quot;: &quot;...&quot;, &quot;weight&quot;: -0.5}}]
+}}&quot;&quot;&quot;
+
+        response = self.llm.chat.completions.create(
+            model=self.model,
+            messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: prompt}],
+            temperature=0.3,
+            response_format={&quot;type&quot;: &quot;json_object&quot;}
+        )
+
+        raw = json.loads(response.choices[0].message.content)
+        positives = raw.get(&#39;positive_rubrics&#39;, [])
+        negatives = raw.get(&#39;negative_rubrics&#39;, [])
+
+        # Tag type for storage
+        for r in positives:
+            r[&#39;rubric_type&#39;] = &#39;positive&#39;
+        for r in negatives:
+            r[&#39;rubric_type&#39;] = &#39;negative&#39;
+
+        return positives + negatives
+</code></pre>
+<hr>
+<h3 id="component-c-rubricbuffer">Component C: RubricBuffer</h3>
+<pre><code class="language-python">import uuid
+import numpy as np
+from typing import Optional
+
+class RubricBuffer:
+    &quot;&quot;&quot;
+    Two-compartment rubric buffer for a query/session.
+
+    Compartment 1 — Persistent (R^persist):
+      Generated once from initial query analysis.
+      Maps to your 8-factor archetype-weighted utility system.
+      Never deleted.
+
+    Compartment 2 — Active/Evolving (R^active):
+      Generated at each retrieval cycle by contrasting used vs. unused.
+      Subject to variance-based pruning (K_max retention).
+      Retired when std=0 (rubric stops discriminating).
+
+    The variance filter is the core mechanism that keeps the buffer healthy:
+    a rubric that ALL memories satisfy (or that NO memories satisfy) has
+    std=0 and provides zero discriminative signal. It is automatically retired.
+    &quot;&quot;&quot;
+
+    def __init__(
+        self,
+        metadata_store: &#39;DenseMetadataStore&#39;,
+        rubric_judge: &#39;RubricJudge&#39;,
+        rubric_generator: &#39;RubricGenerator&#39;,
+        query_key: str,
+        query_text: str,
+        session_id: Optional[str] = None,
+        k_max: int = 10,                # Max active rubrics retained
+        archetype_weights: Optional[dict] = None   # Your 8-factor weights
+    ):
+        self.store = metadata_store
+        self.judge = rubric_judge
+        self.generator = rubric_generator
+        self.query_key = query_key
+        self.query_text = query_text
+        self.session_id = session_id
+        self.k_max = k_max
+        self.step = 0
+
+        # Bootstrap archetype-based persistent rubrics from your 8-factor system
+        if archetype_weights:
+            self._init_archetype_rubrics(archetype_weights)
+
+    def _init_archetype_rubrics(self, archetype_weights: dict):
+        &quot;&quot;&quot;
+        Convert your existing 8-factor utility scoring system into
+        persistent rubric criteria.
+
+        The 8 factors (Relevance, Authority, Recency, Diversity,
+        Procedural Fit, Task Fit, Contradiction, Length) each become
+        a rubric criterion with the archetype weight as the rubric weight.
+        &quot;&quot;&quot;
+        factor_to_rubric = {
+            &#39;relevance&#39;:    &quot;The memory directly addresses or provides context for the query topic&quot;,
+            &#39;authority&#39;:    &quot;The memory comes from an authoritative, verified source or explicit user statement&quot;,
+            &#39;recency&#39;:      &quot;The memory reflects recent context or has been recently confirmed&quot;,
+            &#39;diversity&#39;:    &quot;The memory provides a perspective not already covered by other retrieved memories&quot;,
+            &#39;procedural&#39;:   &quot;The memory contains procedural, how-to, or instructional information relevant to the task&quot;,
+            &#39;task_fit&#39;:     &quot;The memory aligns with the specific task type being performed (research, coding, QA, etc.)&quot;,
+            &#39;contradiction&#39;:&quot;The memory does NOT contradict other high-confidence memories in the session&quot;,
+            &#39;length&#39;:       &quot;The memory has appropriate detail density — neither too sparse nor too verbose for the query&quot;
+        }
+
+        for factor, rubric_text in factor_to_rubric.items():
+            weight = archetype_weights.get(factor, 1.0)
+            if abs(weight) &gt; 0.01:    # Skip factors with near-zero weight
+                rubric_id = str(uuid.uuid4())
+                self.store.add_persistent_rubric(
+                    rubric_id=rubric_id,
+                    query_key=self.query_key,
+                    query_text=self.query_text,
+                    rubric_text=rubric_text,
+                    weight=weight,
+                    rubric_type=&#39;positive&#39; if weight &gt; 0 else &#39;negative&#39;
+                )
+
+    def initialize_search_rubrics(self, sample_memories: list[dict]):
+        &quot;&quot;&quot;
+        Generate initial search-grounded rubrics from available memories.
+        Called once before the first retrieval cycle.
+        &quot;&quot;&quot;
+        rubrics = self.generator.generate_initial_rubrics(
+            self.query_text, sample_memories
+        )
+        for r in rubrics:
+            rubric_id = str(uuid.uuid4())
+            self.store.add_persistent_rubric(
+                rubric_id=rubric_id,
+                query_key=self.query_key,
+                query_text=self.query_text,
+                rubric_text=r[&#39;text&#39;],
+                weight=r.get(&#39;weight&#39;, 1.0),
+                rubric_type=&#39;positive&#39;
+            )
+
+    def compute_rubric_score(
+        self,
+        memory: dict,
+        candidates: Optional[list[dict]] = None
+    ) -&gt; float:
+        &quot;&quot;&quot;
+        S(q, m) = sum(w_k * JUDGE(r_k, m)) / sum(w_k for positive w_k)
+
+        This is equation (1) from the RLER paper, applied to memory retrieval.
+        &quot;&quot;&quot;
+        all_rubrics = (
+            self.store.get_persistent_rubrics(self.query_key)
+            + self.store.get_active_rubrics(
+                query_key=self.query_key,
+                session_id=self.session_id
+            )
+        )
+
+        if not all_rubrics:
+            return 0.5   # No rubrics yet — neutral score
+
+        weighted_sum = 0.0
+        positive_weight_sum = 0.0
+
+        for rubric in all_rubrics:
+            judge_score = self.judge.score(
+                rubric_text=rubric[&#39;rubric_text&#39;],
+                memory_text=memory[&#39;text&#39;],
+                query_text=self.query_text
+            )
+            w = rubric[&#39;weight&#39;]
+            weighted_sum += w * judge_score
+            if w &gt; 0:
+                positive_weight_sum += w
+
+        if positive_weight_sum == 0:
+            return 0.0
+
+        return weighted_sum / positive_weight_sum
+
+    def evolve(
+        self,
+        retrieved_candidates: list[dict],
+        used_memory_ids: set[str]
+    ):
+        &quot;&quot;&quot;
+        Core RLER evolving rubric step.
+
+        Called after the agent uses retrieved memories.
+        Contrasts used vs. unused memories to generate new rubrics.
+        Updates the active rubric buffer with variance filtering.
+
+        Parameters:
+          retrieved_candidates: All memories returned by the search
+          used_memory_ids: IDs of memories the agent actually cited/used
+        &quot;&quot;&quot;
+        self.step += 1
+
+        used   = [m for m in retrieved_candidates if m[&#39;id&#39;] in used_memory_ids]
+        unused = [m for m in retrieved_candidates if m[&#39;id&#39;] not in used_memory_ids]
+
+        if not used or not unused:
+            return   # No contrast available
+
+        # Step 1: Generate new rubrics by contrasting used vs. unused
+        existing = (
+            self.store.get_persistent_rubrics(self.query_key)
+            + self.store.get_active_rubrics(
+                query_key=self.query_key,
+                session_id=self.session_id
+            )
+        )
+
+        new_rubrics = self.generator.generate_evolving_rubrics(
+            query_text=self.query_text,
+            used_memories=used,
+            unused_memories=unused,
+            existing_rubrics=existing,
+            step=self.step
+        )
+
+        # Step 2: Add new rubrics to active buffer
+        for r in new_rubrics:
+            rubric_id = str(uuid.uuid4())
+            self.store.add_active_rubric(
+                rubric_id=rubric_id,
+                rubric_text=r[&#39;text&#39;],
+                weight=r.get(&#39;weight&#39;, 1.0),
+                rubric_type=r.get(&#39;rubric_type&#39;, &#39;positive&#39;),
+                query_key=self.query_key,
+                session_id=self.session_id,
+                step_created=self.step
+            )
+
+        # Step 3: Compute variance for all active rubrics over this candidate set
+        active_rubrics = self.store.get_active_rubrics(
+            query_key=self.query_key,
+            session_id=self.session_id
+        )
+
+        for rubric in active_rubrics:
+            scores = self.judge.score_batch(
+                rubric_text=rubric[&#39;rubric_text&#39;],
+                memories=retrieved_candidates,
+                query_text=self.query_text
+            )
+            variance = float(np.std(scores))
+            self.store.update_active_rubric_variance(rubric[&#39;id&#39;], variance)
+
+        # Step 4: Prune by variance — same rule as RLER Algorithm 1
+        # Remove std=0 rubrics; keep top K_max by std descending
+        self.store.prune_active_rubrics(
+            query_key=self.query_key,
+            session_id=self.session_id,
+            k_max=self.k_max
+        )
+</code></pre>
+<hr>
+<h3 id="rubric-re-ranking-hybrid-score-computation">Rubric Re-ranking: Hybrid Score Computation</h3>
+<p>This function belongs in the search/memory layer and combines KNN scores with rubric scores:</p>
+<pre><code class="language-python">def compute_hybrid_scores(
+    candidates: list[dict],
+    rubric_buffer: &#39;RubricBuffer&#39;,
+    alpha: float = 0.50,   # Embedding similarity weight
+    beta:  float = 0.35,   # Rubric score weight
+    gamma: float = 0.15,   # Recency weight
+) -&gt; list[dict]:
+    &quot;&quot;&quot;
+    Re-rank KNN candidates using rubric scores.
+
+    The three-way hybrid mirrors a combined retrieval score:
+      - alpha: semantic proximity (from FAISS)
+      - beta:  rubric quality (from evolving rubric buffer)
+      - gamma: temporal recency (from metadata)
+
+    α + β + γ = 1.0
+    &quot;&quot;&quot;
+    import datetime
+
+    def recency_score(timestamp_str: Optional[str]) -&gt; float:
+        &quot;&quot;&quot;Exponential decay: very recent → 1.0, 1-year-old → ~0.37&quot;&quot;&quot;
+        if not timestamp_str:
+            return 0.5
+        try:
+            ts = datetime.datetime.fromisoformat(timestamp_str)
+            age_days = (datetime.datetime.now() - ts).days
+            return float(np.exp(-age_days / 365))   # λ = 1/365
+        except Exception:
+            return 0.5
+
+    # Normalize embedding scores from [-1,1] to [0,1]
+    emb_scores = np.array([c[&#39;embedding_score&#39;] for c in candidates])
+    emb_norm = (emb_scores + 1) / 2   # Maps [-1,1] → [0,1]
+
+    scored = []
+    for i, candidate in enumerate(candidates):
+        rubric_score = rubric_buffer.compute_rubric_score(candidate)
+        recency      = recency_score(
+            candidate.get(&#39;metadata&#39;, {}).get(&#39;timestamp&#39;)
+        )
+
+        final_score = (
+            alpha * emb_norm[i]
+            + beta  * rubric_score
+            + gamma * recency
+        )
+
+        scored.append({
+            **candidate,
+            &#39;rubric_score&#39;:    rubric_score,
+            &#39;recency_score&#39;:   recency,
+            &#39;embedding_score_norm&#39;: float(emb_norm[i]),
+            &#39;final_score&#39;:     float(final_score)
+        })
+
+    # Re-rank by final hybrid score
+    scored.sort(key=lambda x: x[&#39;final_score&#39;], reverse=True)
+    return scored
+</code></pre>
+<hr>
+<h2 id="8-phase-5-integration-densememory">8. Phase 5: Integration — DenseMemory</h2>
+<p><em>The unified memory interface that wires all layers together. The rubric evolution loop is triggered automatically after each search call when <code>observe_usage()</code> is called by the agent.</em></p>
+<pre><code class="language-python">import os
+import uuid
+import hashlib
+from typing import Optional
+
+class DenseMemory:
+    &quot;&quot;&quot;
+    Unified dense memory system with evolving rubric re-ranking.
+
+    Usage pattern:
+      1. memory.add(text, user_id, session_id)
+      2. candidates = memory.search(query, user_id, session_id, k=10)
+      3. agent uses some of the candidates...
+      4. memory.observe_usage(query, candidates, used_ids, session_id)
+         → triggers rubric evolution for future searches
+
+    The observe_usage() call is what makes rubrics &quot;evolve.&quot;
+    Without it, the system behaves as pure KNN retrieval with static
+    archetype-weighted rubrics. With it, rubrics co-evolve with
+    the agent&#39;s actual behavior — exactly mirroring RLER.
+    &quot;&quot;&quot;
+
+    def __init__(
+        self,
+        encoder_model: str = &#39;BAAI/bge-m3&#39;,
+        db_path: str = &#39;memory.db&#39;,
+        index_dir: str = &#39;memory_index/&#39;,
+        llm_client = None,           # OpenAI/Anthropic client for rubrics
+        judge_model: str = &#39;gpt-4.1-mini&#39;,
+        generator_model: str = &#39;gpt-4.1&#39;,
+        archetype_weights: Optional[dict] = None,
+        k_max_rubrics: int = 10,
+        device: str = &#39;cpu&#39;
+    ):
+        # ── Core layers ──────────────────────────────────────────────────────
+        self.encoder = DenseEncoder(encoder_model, device=device)
+        self.metadata_store = DenseMetadataStore(db_path)
+        self.vector_index = DenseVectorIndex(
+            dimension=self.encoder.dimension,
+            index_type=&#39;flat&#39;
+        )
+        self.search_engine = DenseSearch(
+            self.encoder, self.vector_index, self.metadata_store
+        )
+
+        # ── Rubric layer ─────────────────────────────────────────────────────
+        self.llm = llm_client
+        self.rubric_judge = RubricJudge(llm_client, model=judge_model) if llm_client else None
+        self.rubric_generator = RubricGenerator(llm_client, model=generator_model) if llm_client else None
+        self.archetype_weights = archetype_weights or {
+            &#39;relevance&#39;:    1.0,
+            &#39;recency&#39;:      0.8,
+            &#39;authority&#39;:    0.6,
+            &#39;diversity&#39;:    0.5,
+            &#39;task_fit&#39;:     0.7,
+            &#39;procedural&#39;:   0.4,
+            &#39;contradiction&#39;: -1.0,  # Penalty
+            &#39;length&#39;:       0.3
+        }
+        self.k_max_rubrics = k_max_rubrics
+
+        # ── Active rubric buffers: one per query_key ──────────────────────────
+        self._rubric_buffers: dict[str, RubricBuffer] = {}
+
+        # ── State ────────────────────────────────────────────────────────────
+        self.index_dir = index_dir
+        self._load_index_if_exists()
+
+    # ── Memory Management ───────────────────────────────────────────────────
+
+    def add(
+        self,
+        text: str,
+        user_id: Optional[str] = None,
+        session_id: Optional[str] = None,
+        memory_type: str = &#39;general&#39;,
+        importance: float = 0.5,
+        tags: Optional[list] = None
+    ) -&gt; str:
+        &quot;&quot;&quot;Add a memory. Returns the new memory&#39;s ID.&quot;&quot;&quot;
+        doc_id = str(uuid.uuid4())
+
+        # Store metadata
+        self.metadata_store.add_memory(
+            doc_id=doc_id,
+            text=text,
+            user_id=user_id,
+            session_id=session_id,
+            memory_type=memory_type,
+            importance=importance,
+            tags=tags
+        )
+
+        # Encode and add to FAISS
+        vector = self.encoder.encode(text)   # (1, D)
+        self.vector_index.add(vector, [doc_id])
+
+        return doc_id
+
+    def delete(self, doc_id: str):
+        &quot;&quot;&quot;
+        Logical deletion — marks memory as deleted in metadata.
+        FAISS index will be cleaned up on next rebuild().
+        &quot;&quot;&quot;
+        self.metadata_store.conn.execute(
+            &quot;UPDATE memories SET memory_type = &#39;deleted&#39; WHERE id = ?&quot;,
+            (doc_id,)
+        )
+        self.metadata_store.conn.commit()
+
+    def rebuild(self):
+        &quot;&quot;&quot;
+        Rebuild FAISS index from all non-deleted memories in SQLite.
+        Call after bulk deletions or on a scheduled cadence.
+        &quot;&quot;&quot;
+        rows = self.metadata_store.conn.execute(
+            &quot;SELECT id, text FROM memories WHERE memory_type != &#39;deleted&#39;&quot;
+        ).fetchall()
+
+        if not rows:
+            return
+
+        ids   = [r[0] for r in rows]
+        texts = [r[1] for r in rows]
+
+        vectors = self.encoder.encode(texts, batch_size=64)
+        n = len(ids)
+        index_type = &#39;hnsw&#39; if n &gt; 10_000 else &#39;flat&#39;
+
+        self.vector_index = DenseVectorIndex(
+            dimension=self.encoder.dimension,
+            index_type=index_type
+        )
+        self.vector_index.add(vectors, ids)
+        self._save_index()
+
+    # ── Search ────────────────────────────────────────────────────────────
+
+    def search(
+        self,
+        query: str,
+        user_id: Optional[str] = None,
+        session_id: Optional[str] = None,
+        k: int = 10,
+        candidate_multiplier: int = 5,   # Over-retrieve factor for rubric re-ranking
+        use_rubrics: bool = True,
+        filters: Optional[dict] = None
+    ) -&gt; list[dict]:
+        &quot;&quot;&quot;
+        Two-stage search:
+          Stage 1: KNN via FAISS — retrieve k * candidate_multiplier candidates
+          Stage 2: Rubric re-ranking — score candidates, return top-k
+
+        If use_rubrics=False or no LLM client configured:
+          Falls back to pure KNN with metadata-boosted scoring.
+        &quot;&quot;&quot;
+        candidate_k = k * candidate_multiplier
+
+        # Stage 1: KNN candidates
+        candidates = self.search_engine.search_candidates(
+            query=query,
+            candidate_k=candidate_k,
+            user_id=user_id,
+            filters=filters
+        )
+
+        if not candidates:
+            return []
+
+        # Stage 2: Rubric re-ranking (if rubrics are enabled)
+        if use_rubrics and self.rubric_judge and self.rubric_generator:
+            buffer = self._get_or_create_rubric_buffer(
+                query, session_id, candidates
+            )
+            candidates = compute_hybrid_scores(
+                candidates=candidates,
+                rubric_buffer=buffer,
+                alpha=0.50,
+                beta=0.35,
+                gamma=0.15
+            )
+        else:
+            # Fallback: simple embedding + recency hybrid (no rubric component)
+            for c in candidates:
+                c[&#39;final_score&#39;] = c[&#39;embedding_score&#39;]
+            candidates.sort(key=lambda x: x[&#39;final_score&#39;], reverse=True)
+
+        # Return top-k
+        return candidates[:k]
+
+    def observe_usage(
+        self,
+        query: str,
+        retrieved_candidates: list[dict],
+        used_memory_ids: set[str],
+        session_id: Optional[str] = None
+    ):
+        &quot;&quot;&quot;
+        Post-search callback: triggers rubric evolution.
+
+        Call this after the agent has consumed the search results and you
+        know which memories were actually used (cited, referenced, built upon).
+
+        This is the RLER &#39;contrasting rollouts → generate new rubrics → update
+        buffer&#39; step, applied to memory retrieval.
+
+        Parameters:
+          retrieved_candidates: The list returned by search()
+          used_memory_ids: Set of memory IDs that the agent used
+        &quot;&quot;&quot;
+        if not self.rubric_generator:
+            return   # No LLM client — rubric evolution disabled
+
+        query_key = self._query_key(query)
+        buffer = self._rubric_buffers.get(query_key)
+
+        if buffer is None:
+            return   # No buffer for this query yet
+
+        buffer.evolve(
+            retrieved_candidates=retrieved_candidates,
+            used_memory_ids=used_memory_ids
+        )
+
+    # ── Internal helpers ──────────────────────────────────────────────────
+
+    def _query_key(self, query: str) -&gt; str:
+        &quot;&quot;&quot;Stable hash of query string for rubric buffer lookup.&quot;&quot;&quot;
+        return hashlib.md5(query.encode()).hexdigest()
+
+    def _get_or_create_rubric_buffer(
+        self,
+        query: str,
+        session_id: Optional[str],
+        sample_candidates: list[dict]
+    ) -&gt; &#39;RubricBuffer&#39;:
+        &quot;&quot;&quot;
+        Retrieve existing rubric buffer for this query key, or create a new one.
+
+        On creation:
+          1. Bootstrap archetype-weighted persistent rubrics
+          2. Generate initial search-grounded rubrics from sample memories
+        &quot;&quot;&quot;
+        query_key = self._query_key(query)
+
+        if query_key not in self._rubric_buffers:
+            buffer = RubricBuffer(
+                metadata_store=self.metadata_store,
+                rubric_judge=self.rubric_judge,
+                rubric_generator=self.rubric_generator,
+                query_key=query_key,
+                query_text=query,
+                session_id=session_id,
+                k_max=self.k_max_rubrics,
+                archetype_weights=self.archetype_weights
+            )
+            # Initialize with search-grounded rubrics from candidate sample
+            buffer.initialize_search_rubrics(sample_candidates[:10])
+            self._rubric_buffers[query_key] = buffer
+
+        return self._rubric_buffers[query_key]
+
+    def _save_index(self):
+        os.makedirs(self.index_dir, exist_ok=True)
+        self.vector_index.save(self.index_dir)
+
+    def _load_index_if_exists(self):
+        if os.path.exists(f&#39;{self.index_dir}/index.faiss&#39;):
+            self.vector_index.load(self.index_dir)
+</code></pre>
+<hr>
+<h3 id="full-usage-example">Full Usage Example</h3>
+<pre><code class="language-python">from openai import OpenAI
+import os
+
+# Initialize
+client = OpenAI(api_key=os.environ[&#39;OPENAI_API_KEY&#39;])
+
+# Define archetype weights for your agent type (maps to 8-factor system)
+research_archetype = {
+    &#39;relevance&#39;:    1.0,
+    &#39;recency&#39;:      0.5,    # Research agent values accuracy over recency
+    &#39;authority&#39;:    0.9,    # High authority weight for research
+    &#39;diversity&#39;:    0.7,
+    &#39;task_fit&#39;:     0.8,
+    &#39;procedural&#39;:   0.3,
+    &#39;contradiction&#39;: -1.0,
+    &#39;length&#39;:       0.4
+}
+
+memory = DenseMemory(
+    encoder_model=&#39;BAAI/bge-m3&#39;,
+    db_path=&#39;research_memory.db&#39;,
+    llm_client=client,
+    archetype_weights=research_archetype,
+    k_max_rubrics=10
+)
+
+# Add some memories
+memory.add(&quot;The team is comparing episodic and semantic retrieval&quot;, user_id=&quot;reader&quot;)
+memory.add(&quot;The semantic layer uses dense retrieval&quot;, user_id=&quot;reader&quot;)
+memory.add(&quot;User prefers detailed technical explanations with mathematical grounding&quot;, user_id=&quot;reader&quot;)
+memory.add(&quot;The prototype uses an HNSW index and SQLite metadata&quot;, user_id=&quot;reader&quot;)
+
+# Search — Stage 1 (KNN) + Stage 2 (Rubric re-ranking)
+results = memory.search(
+    query=&quot;What should I prioritize in the semantic memory redesign?&quot;,
+    user_id=&quot;reader&quot;,
+    session_id=&quot;session_001&quot;,
+    k=5
+)
+
+for r in results:
+    print(f&quot;[{r[&#39;final_score&#39;]:.3f}] {r[&#39;text&#39;]}&quot;)
+    print(f&quot;  emb={r.get(&#39;embedding_score_norm&#39;, 0):.3f}  &quot;
+          f&quot;rubric={r.get(&#39;rubric_score&#39;, 0):.3f}  &quot;
+          f&quot;recency={r.get(&#39;recency_score&#39;, 0):.3f}\n&quot;)
+
+# Agent uses results, builds response, cites memories 0 and 2
+used_ids = {results[0][&#39;id&#39;], results[2][&#39;id&#39;]}
+
+# ← This is the RLER evolution step
+memory.observe_usage(
+    query=&quot;What should I prioritize in the semantic memory redesign?&quot;,
+    retrieved_candidates=results,
+    used_memory_ids=used_ids,
+    session_id=&quot;session_001&quot;
+)
+# Rubric buffer now has new evolving criteria generated by contrasting
+# memories 0+2 (used) against memories 1+3+4 (unused).
+# Future searches on similar queries will benefit from these rubrics.
+
+# Next search in same session — rubrics have evolved
+results_v2 = memory.search(
+    query=&quot;How should the dense encoder integrate with the existing HNSW index?&quot;,
+    user_id=&quot;reader&quot;,
+    session_id=&quot;session_001&quot;,
+    k=5
+)
+</code></pre>
+<hr>
+<h2 id="9-implementation-checklist">9. Implementation Checklist</h2>
+<h3 id="phase-1-encoding-engine">Phase 1: Encoding Engine</h3>
+<ul>
+<li><input disabled="" type="checkbox"> <code>encoder.py</code>: <code>DenseEncoder</code> class with <code>encode()</code>, <code>_mean_pool()</code>, <code>_normalize()</code></li>
+<li><input disabled="" type="checkbox"> Device management (CPU / CUDA)</li>
+<li><input disabled="" type="checkbox"> Batch encoding with configurable <code>batch_size</code></li>
+<li><input disabled="" type="checkbox"> Unit test: verify output shape <code>(N, D)</code>, dtype <code>float32</code>, all norms ≈ 1.0</li>
+</ul>
+<h3 id="phase-2-storage-indexing">Phase 2: Storage &amp; Indexing</h3>
+<ul>
+<li><input disabled="" type="checkbox"> <code>index.py</code>: <code>DenseVectorIndex</code> with <code>add()</code>, <code>search()</code>, <code>save()</code>, <code>load()</code></li>
+<li><input disabled="" type="checkbox"> <code>metadata.py</code>: <code>DenseMetadataStore</code> with three tables (memories, persistent rubrics, active rubrics)</li>
+<li><input disabled="" type="checkbox"> Persistent rubric CRUD: <code>add_persistent_rubric()</code>, <code>get_persistent_rubrics()</code></li>
+<li><input disabled="" type="checkbox"> Active rubric CRUD: <code>add_active_rubric()</code>, <code>get_active_rubrics()</code>, <code>update_active_rubric_variance()</code>, <code>delete_active_rubric()</code>, <code>prune_active_rubrics()</code></li>
+<li><input disabled="" type="checkbox"> FAISS index selection logic: flat → HNSW → IVF</li>
+<li><input disabled="" type="checkbox"> Save/load complete index</li>
+<li><input disabled="" type="checkbox"> Unit test: add 100 vectors, search, verify docid mapping round-trips</li>
+</ul>
+<h3 id="phase-3-search-retrieval">Phase 3: Search &amp; Retrieval</h3>
+<ul>
+<li><input disabled="" type="checkbox"> <code>search.py</code>: <code>DenseSearch.search_candidates()</code> — over-retrieves for rubric layer</li>
+<li><input disabled="" type="checkbox"> Metadata filtering in <code>search_candidates()</code></li>
+<li><input disabled="" type="checkbox"> <code>batch_search_candidates()</code> for multi-query optimization</li>
+<li><input disabled="" type="checkbox"> <code>set_search_quality()</code> for HNSW efSearch tuning</li>
+<li><input disabled="" type="checkbox"> Thread control via <code>faiss.omp_set_num_threads()</code></li>
+<li><input disabled="" type="checkbox"> Result deduplication</li>
+<li><input disabled="" type="checkbox"> Score normalization (embedding score → [0, 1])</li>
+<li><input disabled="" type="checkbox"> Unit test: verify over-retrieval factor, filter behavior, dedup</li>
+</ul>
+<h3 id="phase-4-evolving-rubric-system">Phase 4: Evolving Rubric System</h3>
+<ul>
+<li><input disabled="" type="checkbox"> <code>rubric_judge.py</code>: <code>RubricJudge.score()</code> with disk cache</li>
+<li><input disabled="" type="checkbox"> <code>rubric_judge.py</code>: <code>RubricJudge.score_batch()</code> for variance computation</li>
+<li><input disabled="" type="checkbox"> <code>rubric_generator.py</code>: <code>RubricGenerator.generate_initial_rubrics()</code></li>
+<li><input disabled="" type="checkbox"> <code>rubric_generator.py</code>: <code>RubricGenerator.generate_evolving_rubrics()</code> — contrast used vs. unused</li>
+<li><input disabled="" type="checkbox"> <code>rubric_buffer.py</code>: <code>RubricBuffer._init_archetype_rubrics()</code> — 8-factor to persistent rubrics</li>
+<li><input disabled="" type="checkbox"> <code>rubric_buffer.py</code>: <code>RubricBuffer.compute_rubric_score()</code> — equation (1) from RLER</li>
+<li><input disabled="" type="checkbox"> <code>rubric_buffer.py</code>: <code>RubricBuffer.evolve()</code> — contrast → generate → score variance → prune</li>
+<li><input disabled="" type="checkbox"> <code>compute_hybrid_scores()</code> utility function (α·emb + β·rubric + γ·recency)</li>
+<li><input disabled="" type="checkbox"> Unit test: evolve with 3 used / 3 unused memories, verify rubric buffer grows then prunes</li>
+</ul>
+<h3 id="phase-5-integration">Phase 5: Integration</h3>
+<ul>
+<li><input disabled="" type="checkbox"> <code>memory.py</code>: <code>DenseMemory</code> full class</li>
+<li><input disabled="" type="checkbox"> <code>add()</code>, <code>delete()</code>, <code>rebuild()</code> API</li>
+<li><input disabled="" type="checkbox"> Two-stage <code>search()</code>: KNN → rubric re-ranking</li>
+<li><input disabled="" type="checkbox"> <code>observe_usage()</code> callback — triggers rubric evolution</li>
+<li><input disabled="" type="checkbox"> <code>_get_or_create_rubric_buffer()</code> — lazy initialization per query key</li>
+<li><input disabled="" type="checkbox"> Graceful fallback when <code>llm_client=None</code> (pure KNN mode)</li>
+<li><input disabled="" type="checkbox"> Integration test: 5-turn conversation, verify rubric buffer evolves</li>
+<li><input disabled="" type="checkbox"> Benchmark: compare pure KNN vs. rubric-augmented retrieval quality</li>
+</ul>
+<hr>
+<h2 id="10-key-takeaways">10. Key Takeaways</h2>
+<h3 id="retrieval-layer">Retrieval Layer</h3>
+<ol>
+<li><strong>Over-retrieve with KNN</strong>: Default to <code>k * 5</code> candidates from FAISS — rubric re-ranking needs headroom</li>
+<li><strong>Shape &amp; dtype</strong>: Query vector must be <code>(1, D)</code> and <code>float32</code> before FAISS search</li>
+<li><strong>Two-stage pipeline</strong>: KNN gives you candidates fast; rubrics give you the right ones precisely</li>
+<li><strong>Normalize always</strong>: L2-normalize all vectors so <code>IndexFlatIP</code> equals cosine similarity</li>
+<li><strong>Start flat, upgrade later</strong>: <code>IndexFlatIP</code> for dev/small scale; switch to HNSW at &gt;10k memories</li>
+</ol>
+<h3 id="encoding-layer">Encoding Layer</h3>
+<ol start="6">
+<li><strong>Single encoder for queries and memories</strong>: Same pooling, same normalization — consistency matters</li>
+<li><strong>Mean pool for sentence-transformers models</strong>: CLS pool only for BERT-style classification models</li>
+<li><strong>Batch size 32–64</strong>: Balance GPU utilization vs. memory footprint</li>
+<li><strong>Model choice matters</strong>: <code>BAAI/bge-m3</code> for quality; <code>all-MiniLM-L6-v2</code> for speed</li>
+</ol>
+<h3 id="storage-layer">Storage Layer</h3>
+<ol start="10">
+<li><strong>FAISS for vectors only</strong>: All metadata, rubric buffers, and access stats live in SQLite</li>
+<li><strong>Three SQLite tables</strong>: <code>memories</code>, <code>rubric_buffer_persistent</code>, <code>rubric_buffer_active</code></li>
+<li><strong>Logical deletion</strong>: Mark as deleted in metadata; clean up FAISS on scheduled <code>rebuild()</code></li>
+<li><strong>IndexIDMap for frequent deletes</strong>: Adds overhead but avoids full rebuilds</li>
+</ol>
+<h3 id="rubric-system">Rubric System</h3>
+<ol start="14">
+<li><strong>Persistent rubrics never change</strong>: Bootstrap from archetype weights; they are your stable priors</li>
+<li><strong>Active rubrics are transient</strong>: Generated from retrieval contrasts; pruned when they stop discriminating</li>
+<li><strong>The variance filter is the key mechanism</strong>: <code>std(r_k) = 0</code> means the rubric scores all candidates the same — it provides zero gradient signal and should be retired immediately</li>
+<li><strong>Cache JUDGE results aggressively</strong>: <code>JUDGE(r_k, memory_m)</code> is deterministic — memory content doesn&#39;t change. Disk-cache every judge call to avoid redundant LLM API costs</li>
+<li><strong>Use a cheaper model for judging</strong>: Judge is called <code>K × N</code> times per search cycle. Use <code>gpt-4.1-mini</code> or <code>claude-haiku</code>, not the full model</li>
+<li><strong>Evolving rubrics require contrast</strong>: If every retrieved memory was used, or none was used, there&#39;s no signal. <code>observe_usage()</code> is a no-op in these edge cases</li>
+<li><strong>observe_usage() is the RLER step</strong>: Without it, the system is pure KNN + static archetype rubrics. The evolution only happens when you close the feedback loop by reporting what was actually used</li>
+</ol>
+<h3 id="architecture">Architecture</h3>
+<ol start="21">
+<li><strong>Rubric buffer is per query_key, not per search call</strong>: The same query benefits from rubric history across multiple sessions. This is where &quot;evolving&quot; truly accumulates</li>
+<li><strong>Session-wide active rubrics</strong>: Rubrics with <code>session_id</code> but no <code>query_key</code> apply broadly to all retrievals in a session — useful for capturing session-level context shifts</li>
+<li><strong>α + β + γ = 1.0</strong>: Keep hybrid weights normalized; this makes the final score directly comparable across queries and sessions</li>
+<li><strong>Train-test mismatch warning (from RLER paper)</strong>: The LLM judge&#39;s biases become your system&#39;s retrieval biases over time. Monitor judge consistency if you switch models</li>
+</ol>
+<hr>
+<p><em>Architecture inspired by: DR Tulu / RLER — Shao et al., arXiv:2511.19399v2, Nov 2025</em></p>
+</article></div>
+</main>
+</body>
+</html>

@@ -1,0 +1,865 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="A deep reference on hippocampal circuits, memory encoding, retrieval, and consolidation.">
+<title>Hippocampal Neuroscience · Razi Ashary</title>
+<style>
+:root{color-scheme:light dark;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f7f5f1;color:#21302d}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-width:0}a{color:#226f5e;text-underline-offset:3px}
+.topbar{position:sticky;top:0;z-index:5;background:#f7f5f1ee;backdrop-filter:blur(12px);border-bottom:1px solid #d8ded8}
+.topbar-inner{max-width:1220px;min-height:62px;margin:auto;padding:10px 24px;display:flex;align-items:center;gap:16px}
+.home-link{display:inline-block;flex-shrink:0;padding:8px 12px;border:1px solid #c9d6cc;border-radius:9px;text-decoration:none;font-size:.84rem;font-weight:700}
+.home-link:hover,.home-link:focus-visible{background:#e5eee7}.topbar-title{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:.85rem;color:#5a6b60}
+.layout{max-width:1220px;margin:0 auto;padding:42px 24px 100px;display:grid;grid-template-columns:250px minmax(0,1fr);align-items:start;gap:44px}
+.sidebar{position:sticky;top:90px;max-height:calc(100vh - 110px);overflow:auto;padding:8px 12px 16px 0;border-right:1px solid #d8ded8}
+.sidebar h2{margin:0 0 12px;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:#66776d}.sidebar ol,.mobile-toc ol{margin:0;padding-left:18px}.sidebar li,.mobile-toc li{margin:8px 0;line-height:1.35;font-size:.82rem}.sidebar a,.mobile-toc a{text-decoration:none}.sidebar a:hover,.mobile-toc a:hover{text-decoration:underline}
+.mobile-toc{display:none}.article{min-width:0;max-width:880px;line-height:1.75;font-size:1.02rem}.article h1,.article h2,.article h3,.article h4{line-height:1.2;letter-spacing:-.03em;scroll-margin-top:84px;color:#1c3430}
+.article h1{margin:0 0 12px;font-size:clamp(2.2rem,5vw,3.55rem);letter-spacing:-.055em}.article h2{margin:2.5em 0 .8em;padding-top:.1em;border-top:1px solid #d8ded8;font-size:1.68rem}.article h3{margin:2em 0 .65em;font-size:1.27rem}.article h4{margin:1.6em 0 .5em;font-size:1.08rem}
+.article p{margin:1em 0}.article ul,.article ol{padding-left:1.5em}.article li{margin:.35em 0}.article blockquote{margin:1.4em 0;padding:.5em 1.15em;border-left:4px solid #6da28e;background:#eaf2ed;border-radius:0 9px 9px 0}.article blockquote p{margin:.45em 0}
+.article pre,.article code{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace}.article pre{max-width:100%;overflow-x:auto;padding:16px 18px;border:1px solid #d8ded8;border-radius:10px;background:#eef1ed;font-size:.79em;line-height:1.55;tab-size:4}.article pre code{background:none;padding:0;border:0}.article :not(pre)>code{padding:.12em .3em;border-radius:4px;background:#edf0e9;font-size:.88em;overflow-wrap:anywhere}
+.article table{display:block;width:max-content;max-width:100%;overflow-x:auto;border-collapse:collapse;margin:1.5em 0;font-size:.86em;line-height:1.4}.article th,.article td{min-width:120px;padding:10px 12px;border:1px solid #d8ded8;text-align:left;vertical-align:top}.article th{background:#eaf2ed}.article hr{border:0;border-top:1px solid #d8ded8;margin:2.6em 0}.article mjx-container[display="true"]{max-width:100%;overflow-x:auto;overflow-y:hidden}
+.reading-note{margin:0 0 2.4rem;color:#687970;font-size:.85rem}.article img{max-width:100%;height:auto}
+@media(max-width:850px){.layout{display:block;padding:28px 18px 72px}.sidebar{display:none}.mobile-toc{display:block;margin:0 0 34px;padding:13px 16px;border:1px solid #d8ded8;border-radius:10px;background:#eef3ee}.mobile-toc summary{cursor:pointer;font-weight:700}.mobile-toc ol{margin-top:12px}.article{font-size:1rem}.article h2{font-size:1.48rem}.topbar-inner{padding:8px 18px;min-height:56px}}
+@media(prefers-color-scheme:dark){:root{background:#111917;color:#e5ece7}a{color:#8fd1b4}.topbar{background:#111917ee;border-color:#34443a}.home-link{border-color:#455b4c}.home-link:hover,.home-link:focus-visible{background:#24362b}.topbar-title,.reading-note{color:#a9b9ac}.sidebar{border-color:#34443a}.sidebar h2{color:#a9b9ac}.article h1,.article h2,.article h3,.article h4{color:#edf5ef}.article h2,.article hr{border-color:#34443a}.article blockquote,.mobile-toc{background:#1c3024;border-color:#4f7b60}.article pre{background:#151f19;border-color:#34443a}.article :not(pre)>code{background:#26362b}.article th,.article td{border-color:#34443a}.article th{background:#1c3024}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{.topbar,.sidebar,.mobile-toc{display:none!important}.layout{display:block;padding:0}.article{max-width:none;font-size:10.5pt;color:#111}.article h1,.article h2,.article h3,.article h4{color:#111}.article pre{white-space:pre-wrap;overflow:visible}.article table{max-width:none;overflow:visible}.article tr{break-inside:avoid}}
+</style>
+
+</head>
+<body>
+<header class="topbar"><div class="topbar-inner"><a class="home-link" href="../index.html">← Back to library</a><span class="topbar-title">Hippocampal Neuroscience</span></div></header>
+<main class="layout">
+<nav class="sidebar" aria-label="Contents"><h2>Contents</h2><ol><li><a href="#1-the-macro-anatomy-locating-the-system">1. The Macro Anatomy — Locating the System</a></li><li><a href="#2-the-trisynaptic-circuit-the-load-bearing-loop">2. The Trisynaptic Circuit — The Load-Bearing Loop</a></li><li><a href="#3-layer-by-layer-entorhinal-cortex">3. Layer-by-Layer: Entorhinal Cortex</a></li><li><a href="#4-layer-by-layer-dentate-gyrus-dg-pattern-separation">4. Layer-by-Layer: Dentate Gyrus (DG) — Pattern Separation</a></li><li><a href="#5-layer-by-layer-ca3-pattern-completion-and-attractor-dynamics">5. Layer-by-Layer: CA3 — Pattern Completion and Attractor Dynamics</a></li><li><a href="#6-layer-by-layer-ca1-comparator-and-output-gateway">6. Layer-by-Layer: CA1 — Comparator and Output Gateway</a></li><li><a href="#7-how-information-actually-flows-the-full-signal-arc">7. How Information Actually Flows — The Full Signal Arc</a></li><li><a href="#8-oscillatory-infrastructure-theta-gamma-and-sharp-wave-ripples">8. Oscillatory Infrastructure — Theta, Gamma, and Sharp-Wave Ripples</a></li><li><a href="#9-neuroplasticity-how-connections-change">9. Neuroplasticity — How Connections Change</a></li><li><a href="#10-trajectory-creation-how-the-brain-chains-memories-into-sequences">10. Trajectory Creation — How the Brain Chains Memories Into Sequences</a></li><li><a href="#11-memory-consolidation-from-hippocampus-to-neocortex">11. Memory Consolidation — From Hippocampus to Neocortex</a></li><li><a href="#12-engrams-the-physical-trace-of-a-memory">12. Engrams — The Physical Trace of a Memory</a></li><li><a href="#13-adult-neurogenesis-structural-plasticity-in-the-dg">13. Adult Neurogenesis — Structural Plasticity in the DG</a></li><li><a href="#14-complementary-learning-systems-cls-theory">14. Complementary Learning Systems (CLS) Theory</a></li><li><a href="#15-procedural-memory-and-the-basal-ganglia-the-other-memory-system">15. Procedural Memory and the Basal Ganglia — The Other Memory System</a></li><li><a href="#16-glossary-of-key-terms">16. Glossary of Key Terms</a></li></ol></nav>
+<div><details class="mobile-toc"><summary>Contents</summary><ol><li><a href="#1-the-macro-anatomy-locating-the-system">1. The Macro Anatomy — Locating the System</a></li><li><a href="#2-the-trisynaptic-circuit-the-load-bearing-loop">2. The Trisynaptic Circuit — The Load-Bearing Loop</a></li><li><a href="#3-layer-by-layer-entorhinal-cortex">3. Layer-by-Layer: Entorhinal Cortex</a></li><li><a href="#4-layer-by-layer-dentate-gyrus-dg-pattern-separation">4. Layer-by-Layer: Dentate Gyrus (DG) — Pattern Separation</a></li><li><a href="#5-layer-by-layer-ca3-pattern-completion-and-attractor-dynamics">5. Layer-by-Layer: CA3 — Pattern Completion and Attractor Dynamics</a></li><li><a href="#6-layer-by-layer-ca1-comparator-and-output-gateway">6. Layer-by-Layer: CA1 — Comparator and Output Gateway</a></li><li><a href="#7-how-information-actually-flows-the-full-signal-arc">7. How Information Actually Flows — The Full Signal Arc</a></li><li><a href="#8-oscillatory-infrastructure-theta-gamma-and-sharp-wave-ripples">8. Oscillatory Infrastructure — Theta, Gamma, and Sharp-Wave Ripples</a></li><li><a href="#9-neuroplasticity-how-connections-change">9. Neuroplasticity — How Connections Change</a></li><li><a href="#10-trajectory-creation-how-the-brain-chains-memories-into-sequences">10. Trajectory Creation — How the Brain Chains Memories Into Sequences</a></li><li><a href="#11-memory-consolidation-from-hippocampus-to-neocortex">11. Memory Consolidation — From Hippocampus to Neocortex</a></li><li><a href="#12-engrams-the-physical-trace-of-a-memory">12. Engrams — The Physical Trace of a Memory</a></li><li><a href="#13-adult-neurogenesis-structural-plasticity-in-the-dg">13. Adult Neurogenesis — Structural Plasticity in the DG</a></li><li><a href="#14-complementary-learning-systems-cls-theory">14. Complementary Learning Systems (CLS) Theory</a></li><li><a href="#15-procedural-memory-and-the-basal-ganglia-the-other-memory-system">15. Procedural Memory and the Basal Ganglia — The Other Memory System</a></li><li><a href="#16-glossary-of-key-terms">16. Glossary of Key Terms</a></li></ol></details><article class="article"><p class="reading-note">Research and learning notes · A deep reference on hippocampal circuits, memory encoding, retrieval, and consolidation.</p><h1 id="hippocampal-neuroscience-a-deep-reference">Hippocampal Neuroscience — A Deep Reference</h1>
+<hr>
+<h2 id="1-the-macro-anatomy-locating-the-system">1. The Macro Anatomy — Locating the System</h2>
+<p>The hippocampus is a curved, bilateral structure nested inside the medial temporal lobe of each cerebral hemisphere. Its name comes from the Greek for &quot;seahorse&quot; — the cross-section resembles one. It is part of the <strong>limbic system</strong> and is the structure most tightly associated with <strong>episodic memory</strong> (memories of specific events in time and place) and <strong>spatial navigation</strong>.</p>
+<h3 id="the-medial-temporal-lobe-memory-system">The medial temporal lobe memory system</h3>
+<p>The hippocampus does not operate alone. It sits at the apex of a medial temporal lobe (MTL) hierarchy:</p>
+<pre><code>Neocortex (all sensory and association areas)
+    ↓  (converging projections)
+Perirhinal Cortex  ←→  Parahippocampal Cortex
+    ↓                        ↓
+Lateral Entorhinal Cortex   Medial Entorhinal Cortex
+             ↓
+        Hippocampus
+           (DG → CA3 → CA1)
+             ↓
+        Back to Entorhinal Cortex
+             ↓
+        Back to Neocortex
+</code></pre>
+<p>This is a bidirectional hierarchy: sensory information flows <em>in</em> through the entorhinal cortex, gets processed through the hippocampal circuit, and flows <em>back out</em> to the cortex to update neocortical representations. The loop is not unidirectional — the hippocampus both <em>reads from</em> and <em>writes to</em> the cortex.</p>
+<h3 id="hippocampal-subfields-from-medial-to-lateral-in-the-curved-structure">Hippocampal subfields (from medial to lateral in the curved structure)</h3>
+<table>
+<thead>
+<tr>
+<th>Subfield</th>
+<th>Key cell type</th>
+<th>Primary role</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>CA4 / Hilus</strong></td>
+<td>Mossy cells, interneurons</td>
+<td>Modulate DG activity; contribute to pattern separation support</td>
+</tr>
+<tr>
+<td><strong>Dentate Gyrus (DG)</strong></td>
+<td>Granule cells (~1 million in humans)</td>
+<td>Pattern separation — make similar inputs orthogonal</td>
+</tr>
+<tr>
+<td><strong>CA3</strong></td>
+<td>Pyramidal cells with massive recurrent collaterals</td>
+<td>Pattern completion — reconstruct full memory from partial cue</td>
+</tr>
+<tr>
+<td><strong>CA1</strong></td>
+<td>Pyramidal cells (output layer)</td>
+<td>Comparator — detect mismatch between expectation and reality</td>
+</tr>
+<tr>
+<td><strong>Subiculum</strong></td>
+<td>Pyramidal cells</td>
+<td>Output relay to entorhinal cortex, prefrontal cortex, and hypothalamus</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="2-the-trisynaptic-circuit-the-load-bearing-loop">2. The Trisynaptic Circuit — The Load-Bearing Loop</h2>
+<p>The classical hippocampal circuit involves <strong>three synaptic hops</strong> between the entorhinal cortex and CA1. This is called the <strong>trisynaptic pathway</strong> or <strong>trisynaptic loop</strong>:</p>
+<pre><code>Entorhinal Cortex Layer II (EC2)
+      │  ←─── Perforant Path (PP)
+      ▼
+Dentate Gyrus (granule cells)
+      │  ←─── Mossy Fiber Pathway (MF)
+      ▼
+CA3 (pyramidal cells)
+      │  ←─── Schaffer Collaterals (SC)
+      ▼
+CA1 (pyramidal cells)
+      │
+      ▼
+Subiculum → Entorhinal Cortex Layer V/VI → Back to neocortex
+</code></pre>
+<p><strong>Why three synapses, not one?</strong> The layered architecture enforces computational separation. Each hop transforms the representation in a specific way:</p>
+<ul>
+<li>Hop 1 (PP → DG): decorrelates similar inputs into distinct sparse codes.</li>
+<li>Hop 2 (MF → CA3): uses those sparse codes to set up an autoassociative attractor network.</li>
+<li>Hop 3 (SC → CA1): compares the reconstructed memory (from CA3) against current input (directly from EC layer III) and signals mismatches.</li>
+</ul>
+<p>There is also a <strong>monosynaptic path</strong> from EC3 directly to CA1, bypassing DG and CA3 entirely. This direct route is thought to carry current sensory input (&quot;what is happening right now&quot;), while the trisynaptic path carries completed, reconstructed memory (&quot;what was previously associated with this cue&quot;).</p>
+<hr>
+<h2 id="3-layer-by-layer-entorhinal-cortex">3. Layer-by-Layer: Entorhinal Cortex</h2>
+<h3 id="what-it-is">What it is</h3>
+<p>The entorhinal cortex (EC) is the primary gateway between the hippocampus and the rest of the neocortex. It has two functional divisions:</p>
+<p><strong>Medial Entorhinal Cortex (MEC):</strong> Carries <strong>allocentric spatial information</strong> — where you are in abstract space. It contains <strong>grid cells</strong>, which fire in a remarkable hexagonal grid pattern tiling the entire environment, independent of specific landmarks. Grid cells encode the brain&#39;s internal metric for space and are the primary input for <strong>path integration</strong> (computing position from movement, without external cues).</p>
+<p><strong>Lateral Entorhinal Cortex (LEC):</strong> Carries <strong>object and landmark information</strong> — what is in the environment. Responds to specific sensory stimuli, objects, and contextual cues. Less grid-like, more item-centric.</p>
+<h3 id="grid-cells-mec">Grid cells (MEC)</h3>
+<p>Grid cells, discovered by May-Britt Moser and Edvard Moser (Nobel Prize 2014), fire whenever an animal passes through vertices of an invisible hexagonal lattice. Different grid cells have different scales and orientations of their grids. The key properties:</p>
+<ul>
+<li><strong>Hexagonal periodicity</strong> — firing locations form a perfect triangular lattice.</li>
+<li><strong>Spatial scale gradient</strong> — dorsal EC has fine-grained small grids; ventral EC has coarse large grids. This gradient may allow the brain to represent space at multiple resolutions simultaneously.</li>
+<li><strong>Path integration</strong> — grid cells can maintain their spatial representation based purely on self-motion signals, even in the dark without landmarks.</li>
+<li><strong>Generalization to abstract spaces</strong> — human fMRI studies show grid-like signals (6-fold modulation of entorhinal activity) not just during navigation but during conceptual reasoning, suggesting grid codes may be a domain-general computation for structured cognition.</li>
+</ul>
+<h3 id="the-two-entorhinal-input-paths-to-the-hippocampus">The two entorhinal input paths to the hippocampus</h3>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Origin</th>
+<th>Target</th>
+<th>Information type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Perforant Path</strong></td>
+<td>EC layer II (stellate cells)</td>
+<td>DG granule cells and CA3</td>
+<td>Initial, unprocessed sensory context</td>
+</tr>
+<tr>
+<td><strong>Temporo-ammonic Path</strong></td>
+<td>EC layer III</td>
+<td>CA1 distal dendrites</td>
+<td>Current sensory input (for comparison)</td>
+</tr>
+<tr>
+<td><strong>Return projection</strong></td>
+<td>CA1 / Subiculum</td>
+<td>EC layer V/VI</td>
+<td>Processed, completed hippocampal output</td>
+</tr>
+</tbody></table>
+<h3 id="theta-oscillations-in-the-ec">Theta oscillations in the EC</h3>
+<p>The EC is the main source of <strong>theta oscillations</strong> (4–10 Hz) to the hippocampus. During the encoding half of the theta cycle, EC input is strong, telling the hippocampus about the current situation. During the retrieval half, EC input weakens and CA3 recurrent activity drives retrieval of stored patterns. This <strong>theta-phase segregation of encoding vs retrieval</strong> is a fundamental mechanism preventing interference between what you&#39;re learning now and what you&#39;re recalling.</p>
+<hr>
+<h2 id="4-layer-by-layer-dentate-gyrus-dg-pattern-separation">4. Layer-by-Layer: Dentate Gyrus (DG) — Pattern Separation</h2>
+<h3 id="core-computation-pattern-separation">Core computation: Pattern Separation</h3>
+<p>Pattern separation is the process of transforming <strong>similar input representations into non-overlapping (orthogonal) output representations</strong>. It is the biological solution to the catastrophic interference problem: without it, learning new information that resembles old information would overwrite the old.</p>
+<p>The DG achieves pattern separation through three mechanisms:</p>
+<p><strong>1. Sparse coding through inhibition</strong></p>
+<p>The DG contains approximately 1 million granule cells in the human brain, roughly 10× more than the number of EC input cells (~100,000 stellate cells). This <em>expansion recoding</em> — more output neurons than input neurons — allows the DG to spread representations across a much larger coding space. Crucially, only about 2–5% of granule cells are active at any given time (the rest are held silent by powerful inhibitory interneurons). Sparse codes mean that two similar inputs, when each maps to only 2–5% of a million neurons, are statistically almost guaranteed to activate non-overlapping populations. The sparse, distributed code produced by DG is the raw material for CA3 to work with.</p>
+<p><strong>2. Competitive inhibition between granule cells</strong></p>
+<p>Mossy cells in the hilus (CA4 region) and parvalbumin-positive basket cells enforce <strong>lateral inhibition</strong> among granule cells: when one granule cell fires, it suppresses its neighbors. This is a winner-takes-most dynamics that sharpens the separation between similar patterns.</p>
+<p><strong>3. Adult neurogenesis adds a continuous source of plastic neurons</strong></p>
+<p>The DG is one of the only brain regions in mammals (including humans) where new neurons continue to be born throughout adulthood. These new neurons, for several weeks after their birth, are hyperexcitable and highly plastic — they respond strongly to novelty and are modulated by theta oscillations. They enhance the DG&#39;s ability to distinguish between similar but distinct events, especially for fine-grained discrimination. As they mature, they become more like standard granule cells.</p>
+<h3 id="what-pattern-separation-means-computationally">What &quot;pattern separation&quot; means computationally</h3>
+<p>Consider two memories that share 70% of their features (e.g., &quot;Tuesday&#39;s meeting in room A&quot; vs &quot;Wednesday&#39;s meeting in room A&quot;). The DG takes these 70%-overlapping EC representations and produces DG outputs that might share only 10–20% overlap. This prevents CA3 from wrongly completing &quot;Wednesday&#39;s meeting&quot; when you cue with &quot;Tuesday&#39;s meeting.&quot;</p>
+<p>The metric is <strong>population vector overlap</strong> — the proportion of neurons active in both representations. DG systematically reduces this overlap for similar inputs.</p>
+<h3 id="the-dg-as-an-error-correction-module">The DG as an error-correction module</h3>
+<p>Recent evidence from CA3 sequence recordings (Nature Communications, January 2025) suggests that DG input to CA3 may serve a <strong>temporal error-correction function</strong>: it fires to correct CA3 when its internally generated sequence drifts from the correct temporal order. This makes DG not just a one-shot pattern-separator at encoding time, but a continuous online corrector during sequence replay.</p>
+<hr>
+<h2 id="5-layer-by-layer-ca3-pattern-completion-and-attractor-dynamics">5. Layer-by-Layer: CA3 — Pattern Completion and Attractor Dynamics</h2>
+<h3 id="anatomy-that-defines-the-computation">Anatomy that defines the computation</h3>
+<p>CA3 has an extraordinary anatomical feature: massive <strong>recurrent collaterals</strong>. Each CA3 pyramidal cell sends axon branches to approximately 2,500–4,000 other CA3 cells within the same layer. This makes CA3 a densely connected <strong>autoassociative network</strong> — a network that connects its own outputs back to its own inputs.</p>
+<p>The DG-to-CA3 mossy fiber projection is strong but <strong>sparse</strong>: each mossy fiber contacts only ~15 CA3 cells out of ~300,000. This &quot;strong sparse input&quot; is thought to serve as a <strong>forced pattern</strong> during encoding — the DG essentially forces CA3 into a specific firing pattern associated with the new input, which then gets stored in the CA3 recurrent synapses via Hebbian plasticity.</p>
+<h3 id="core-computation-pattern-completion">Core computation: Pattern Completion</h3>
+<p>Pattern completion is the reverse of pattern separation. Given a <strong>partial</strong> cue — a fragment of a previously stored memory — CA3&#39;s recurrent network uses its stored synaptic weights to reconstruct the <strong>full pattern</strong> that was associated with that fragment during encoding.</p>
+<p>This works because:</p>
+<ol>
+<li>During encoding, cells that fired together in CA3 for a given experience had their mutual synapses strengthened (Hebbian LTP).</li>
+<li>During retrieval, a partial cue activates a small subset of the original pattern.</li>
+<li>The recurrent connections from these active cells then activate their learned partners.</li>
+<li>Activity propagates through the recurrent network until a stable, complete pattern is reached.</li>
+</ol>
+<p>The complete, stable pattern is called an <strong>attractor</strong> — a state the network&#39;s dynamics settle into and remain in despite perturbations.</p>
+<h3 id="attractor-dynamics-in-detail">Attractor dynamics in detail</h3>
+<p>The CA3 network is formally an <strong>attractor network</strong>, specifically a <strong>Hopfield network</strong> variant. It stores memories as stable fixed-point attractors in a high-dimensional space defined by the N×N synaptic weight matrix of the recurrent connections.</p>
+<p><strong>Point attractors:</strong> A specific memory is encoded as a stable firing pattern (an attractor state). Even if you start with only 30% of the neurons that were active during encoding, the network dynamics will pull the system toward the full stored pattern.</p>
+<p><strong>Continuous attractors:</strong> For spatial memory and navigation, CA3 is believed to implement <strong>continuous attractor dynamics</strong> — instead of discrete fixed points, there is a continuous manifold of stable states corresponding to different positions in space. The animal&#39;s current position can &quot;slide&quot; smoothly along this manifold as they move, driven by grid cell inputs from MEC.</p>
+<p><strong>Capacity limit:</strong> A Hopfield network with N neurons can store roughly 0.14N memories before retrieval accuracy degrades. The DG&#39;s pattern separation is critical here: if similar memories were encoded as overlapping CA3 patterns, the attractor dynamics would fail (the network would land on a &quot;blend&quot; of two memories rather than one clean attractor). DG&#39;s sparse orthogonalization is what allows CA3&#39;s capacity to be used efficiently.</p>
+<p><strong>How similar inputs are handled:</strong></p>
+<p>When CA3 receives an input that matches one stored memory more than others, the attractor dynamics &quot;pull&quot; the network representation toward that stored attractor. If the input is genuinely ambiguous (similar to two memories), competition between the two attractors determines which one wins. The winner is the one whose attractor basin the current cue lies in — a function of both similarity and prior strengthening.</p>
+<h3 id="the-double-dissociation-of-dg-ca3-and-direct-ec-ca3-in-encoding-vs-retrieval">The double dissociation of DG-CA3 and direct EC-CA3 in encoding vs retrieval</h3>
+<p>A critical experimental finding: <strong>contralateral lesions of DG-CA3 impair encoding but not retrieval, while damage to the direct EC-CA3 path impairs retrieval but not encoding.</strong> This reveals:</p>
+<ul>
+<li><strong>DG-CA3 (via mossy fibers):</strong> Dominant during <em>new encoding</em> — the sparse, strong mossy fiber input forces a new pattern into CA3, creating a new attractor.</li>
+<li><strong>Direct EC input to CA3:</strong> Dominant during <em>retrieval</em> — the entorhinal cue weakly activates CA3, and the recurrent collaterals do the work of completing the stored pattern.</li>
+</ul>
+<p>This is the theta-phase mechanism described earlier: mossy fiber-driven encoding in one theta half-cycle, recurrent-collateral-driven retrieval in the other.</p>
+<hr>
+<h2 id="6-layer-by-layer-ca1-comparator-and-output-gateway">6. Layer-by-Layer: CA1 — Comparator and Output Gateway</h2>
+<h3 id="two-inputs-one-job-comparison">Two inputs, one job: comparison</h3>
+<p>CA1 receives two inputs on different dendritic compartments simultaneously:</p>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Source</th>
+<th>Dendritic location</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Schaffer Collaterals</strong></td>
+<td>CA3 (via recurrent completion)</td>
+<td>Proximal dendrites (stratum radiatum)</td>
+<td>Reconstructed/completed memory</td>
+</tr>
+<tr>
+<td><strong>Temporo-ammonic Path</strong></td>
+<td>EC layer III (direct)</td>
+<td>Distal dendrites (stratum lacunosum-moleculare)</td>
+<td>Current sensory input</td>
+</tr>
+</tbody></table>
+<p>CA1&#39;s <strong>comparator function</strong> is the computation that results from these two inputs being integrated in the same neuron:</p>
+<ul>
+<li>If <strong>CA3 output matches EC3 input</strong>: familiar situation, expected outcome. CA1 fires moderately. Memory retrieval is confirmed.</li>
+<li>If <strong>CA3 output mismatches EC3 input</strong>: something unexpected. CA1 generates a novelty/error signal. This mismatch triggers theta-burst activity, which drives attention, heightened encoding, and potential updating of CA3 representations.</li>
+</ul>
+<p>This is the hippocampal version of <strong>predictive error signaling</strong> — the same computation that drives learning in reinforcement learning (prediction vs. outcome) is implemented here at the circuit level.</p>
+<h3 id="ca1-as-the-output-gate">CA1 as the output gate</h3>
+<p>CA1 is the primary output layer of the hippocampus. Its axons project to:</p>
+<ul>
+<li><strong>Subiculum</strong> → which then projects to EC layer V/VI (feeding back to cortex), as well as to prefrontal cortex, hypothalamus, and amygdala.</li>
+<li><strong>EC directly</strong> (a subset of CA1 axons bypass the subiculum).</li>
+</ul>
+<p>The CA1 output is the hippocampus&#39;s <strong>processed verdict</strong> on the current situation, delivered back to the neocortex.</p>
+<h3 id="prospective-and-retrospective-coding">Prospective and retrospective coding</h3>
+<p>CA1 neurons — specifically &quot;place cells&quot; in spatial tasks — have a striking property called <strong>journey-dependent firing</strong>: the same spatial location produces different CA1 firing patterns depending on where the animal just came from (retrospective coding) or where it is about to go (prospective coding).</p>
+<p>At a maze choice point, CA1 cells sweep forward through the upcoming paths, mentally simulating possible trajectories before the animal physically moves. This &quot;forward sweeping&quot; during theta oscillations is a neural correlate of <strong>planning</strong> and <strong>imagination</strong> — the brain replaying possible futures to evaluate them.</p>
+<h3 id="the-ca1-comparator-as-the-contradiction-detector">The CA1 comparator as the contradiction detector</h3>
+<p>CA1 receives both reconstructed hippocampal activity and more direct cortical input. Comparing these streams may help distinguish recalled expectations from current input and signal novelty or mismatch.</p>
+<hr>
+<h2 id="7-how-information-actually-flows-the-full-signal-arc">7. How Information Actually Flows — The Full Signal Arc</h2>
+<p>Here is the complete signal flow for a single memory retrieval event, from sensory input to recalled memory:</p>
+<h3 id="encoding-storing-a-new-memory">Encoding (storing a new memory)</h3>
+<pre><code>1. SENSORY EXPERIENCE (neocortex)
+   → Visual cortex, auditory cortex, somatosensory cortex all active
+
+2. CONVERGENCE at PERIRHINAL + PARAHIPPOCAMPAL CORTEX
+   → Object identity (what) processed in perirhinal
+   → Spatial context (where) processed in parahippocampal / postrhinal
+
+3. ENTORHINAL CORTEX (EC) LAYER II
+   → Integrates &quot;what&quot; + &quot;where&quot; into a combined representation
+   → Grid cells (MEC) add a spatial coordinate
+   → LEC adds object/context identity
+
+4. PERFORANT PATH → DENTATE GYRUS
+   → EC2 stellate cells project via the perforant path to DG granule cells
+   → DG performs pattern separation: produces a sparse, orthogonalized code
+   → Adult-born neurons (if present and relevant) add high plasticity
+
+5. MOSSY FIBERS → CA3
+   → Sparse but powerful synapses from DG granule cells onto CA3 pyramidal cells
+   → Forces a specific CA3 firing pattern (the &quot;teaching signal&quot;)
+   → Hebbian plasticity strengthens CA3 recurrent connections between co-active cells
+   → The memory is now &quot;stored&quot; as a distributed pattern in CA3 synaptic weights
+
+6. SCHAFFER COLLATERALS → CA1
+   → CA3 outputs via Schaffer collaterals to CA1 proximal dendrites
+   → Simultaneously, EC3 sends direct input to CA1 distal dendrites
+   → CA1 integrates both: confirms encoding, generates output
+
+7. CA1 → SUBICULUM → EC LAYER V/VI → NEOCORTEX
+   → Processed signal feeds back to neocortex
+   → Neocortical representation is slightly updated
+</code></pre>
+<h3 id="retrieval-recalling-a-stored-memory">Retrieval (recalling a stored memory)</h3>
+<pre><code>1. PARTIAL CUE (neocortex or internal state)
+   → A fragment of a past experience becomes active
+
+2. ENTORHINAL CORTEX LAYER II
+   → Cue is translated into an EC representation (sparse but similar to encoding-time EC pattern)
+
+3. PERFORANT PATH → CA3 (direct, bypassing DG partly)
+   → Weak perforant path input provides a partial cue to CA3 recurrent network
+   → DG-derived sparse code also arrives, helping disambiguate similar memories
+
+4. CA3 RECURRENT COMPLETION
+   → Partial pattern activates stored attractor
+   → Recurrent collaterals propagate activity until stable attractor is reached
+   → Full pattern reconstructed from partial cue
+
+5. SCHAFFER COLLATERALS → CA1
+   → Completed CA3 pattern arrives at CA1 proximal dendrites
+   → Current sensory input arrives from EC3 at CA1 distal dendrites
+   → CA1 performs comparator function: match → retrieval confirmed; mismatch → error signal
+
+6. IF MATCH: CA1 → SUBICULUM → EC → NEOCORTEX
+   → Completed memory reinstates neocortical pattern from encoding time
+   → The subjective experience of &quot;remembering&quot;
+
+7. IF MISMATCH: Theta burst firing
+   → Hippocampus flags novelty/error
+   → Increased attention, heightened encoding of the mismatch
+   → Possible updating of CA3 attractor (reconsolidation)
+</code></pre>
+<hr>
+<h2 id="8-oscillatory-infrastructure-theta-gamma-and-sharp-wave-ripples">8. Oscillatory Infrastructure — Theta, Gamma, and Sharp-Wave Ripples</h2>
+<p>Brain oscillations are not epiphenomenal. They are the <strong>timing infrastructure</strong> that organizes which neurons communicate with which, and when. Without understanding oscillations, the circuit behavior described above is incomplete.</p>
+<h3 id="theta-oscillations-4-10-hz">Theta oscillations (4–10 Hz)</h3>
+<p>Theta is the dominant hippocampal rhythm during <strong>active exploration, navigation, and active recall</strong>. Generated primarily by the <strong>medial septum</strong> (via cholinergic and GABAergic projections to hippocampus) and modulated by EC input.</p>
+<p><strong>The encoding/retrieval theta-phase split</strong> (Hasselmo model): Within each ~125ms theta cycle:</p>
+<ul>
+<li><strong>First half (peak):</strong> EC3 → CA1 direct input is strong; CA3 → CA1 (Schaffer) is weak. Long-term potentiation (LTP) at CA3 synapses is high. → <strong>Encoding phase.</strong></li>
+<li><strong>Second half (trough):</strong> EC3 → CA1 direct input weakens; CA3 → CA1 is strong. → <strong>Retrieval phase.</strong></li>
+</ul>
+<p>This elegant temporal alternation within every 125ms cycle prevents encoding and retrieval from interfering with each other — a form of <strong>time-division multiplexing</strong> at the neural circuit level.</p>
+<p><strong>Theta sequences:</strong> During theta, place cells don&#39;t just fire independently — they fire in <strong>sequences</strong> within each theta cycle that compress a future trajectory into a 125ms window. If a rat is at position P moving toward goal G, within a single theta cycle: cells representing positions between P and G fire in order, sweeping from current location to anticipated future location. This is the brain&#39;s mechanism for <strong>prospective coding and planning on a timescale too fast for deliberate thought.</strong></p>
+<h3 id="gamma-oscillations-30-100-hz">Gamma oscillations (30–100 Hz)</h3>
+<p>Gamma oscillations are faster and local. There are two distinct gamma bands in the hippocampus:</p>
+<table>
+<thead>
+<tr>
+<th>Band</th>
+<th>Frequency</th>
+<th>Origin</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Slow gamma</strong> (30–50 Hz)</td>
+<td>Generated locally in hippocampus (CA3 → CA1 Schaffer input)</td>
+<td>Memory retrieval from stored patterns</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Fast gamma</strong> (60–100 Hz)</td>
+<td>Driven by EC input (MEC → hippocampus)</td>
+<td>Encoding of new information</td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>Theta-gamma coupling:</strong> Within each theta cycle, multiple gamma cycles are nested. This nesting allows multiple distinct items to be represented in sequence within a single theta cycle — each gamma sub-cycle carries one item. A theta cycle with 7 nested gamma cycles can represent a sequence of 7 items. This is the brain&#39;s <strong>working memory buffer</strong> — the mechanism by which multiple pieces of information are held and sequenced simultaneously.</p>
+<p>The coupling strength between theta and gamma correlates with memory performance across individuals. More tightly coupled = better encoding and retrieval.</p>
+<h3 id="sharp-wave-ripples-swrs-80-200-hz">Sharp-Wave Ripples (SWRs) — 80–200 Hz</h3>
+<p>SWRs are bursts of high-frequency oscillation (ripples, ~150 Hz) superimposed on slower sharp waves. They occur during <strong>rest, quiet wakefulness, and slow-wave sleep (NREM)</strong>. They are <em>absent</em> during active theta-driven exploration.</p>
+<p><strong>The mechanism:</strong> A subset of CA3 pyramidal cells fire synchronously and spontaneously, driven by their strong recurrent connections. This synchronous CA3 burst propagates via Schaffer collaterals to CA1, causing a brief ~80ms burst of rapid CA1 oscillation.</p>
+<p><strong>What they do:</strong></p>
+<ol>
+<li><strong>Memory replay:</strong> During SWRs, the <em>sequence of neurons that fired during a recent experience replays at 10–20× compressed speed.</em> A 10-minute maze run is replayed in ~1 second. This compressed replay is the mechanism of <strong>offline memory consolidation.</strong></li>
+<li><strong>Selective consolidation:</strong> Not all experiences are replayed equally. Rewarded experiences, surprising events, and emotionally significant moments generate more robust SWR-associated replay. This acts as a <strong>priority filter</strong> — the brain selects which experiences to consolidate based on their significance.</li>
+<li><strong>LTP induction:</strong> The synchronous CA3→CA1 firing during SWRs, combined with the dendritic depolarization of the sharp wave, induces LTP at CA3→CA1 synapses. This literally strengthens the synaptic weight pattern of the replay experience.</li>
+<li><strong>Systems consolidation:</strong> During SWRs, hippocampal CA1 output is coordinated with <strong>slow oscillations in the prefrontal cortex and neocortex</strong>, creating windows in which hippocampal patterns are &quot;transferred&quot; to neocortical storage.</li>
+</ol>
+<hr>
+<h2 id="9-neuroplasticity-how-connections-change">9. Neuroplasticity — How Connections Change</h2>
+<p>Neuroplasticity is the general term for the brain&#39;s ability to change its structure and function in response to experience. There are multiple mechanistically distinct forms.</p>
+<h3 id="long-term-potentiation-ltp-strengthening">Long-Term Potentiation (LTP) — Strengthening</h3>
+<p>LTP is the most-studied synaptic mechanism for memory. Discovered by Timothy Bliss and Terje Lømo in 1973, it is a <strong>long-lasting increase in synaptic efficacy</strong> following high-frequency stimulation.</p>
+<p><strong>Molecular mechanism (Hebbian LTP):</strong></p>
+<ol>
+<li>A presynaptic neuron fires, releasing glutamate.</li>
+<li>Glutamate binds to AMPA receptors on the postsynaptic membrane, causing a small depolarization.</li>
+<li>If the postsynaptic cell is simultaneously strongly depolarized (by other inputs), NMDA receptors unblock (the Mg²⁺ block is removed by depolarization) and allow Ca²⁺ to enter.</li>
+<li>Ca²⁺ influx activates <strong>CaMKII</strong> (calcium/calmodulin-dependent protein kinase II), which:<ul>
+<li>Phosphorylates existing AMPA receptors, increasing their conductance.</li>
+<li>Triggers insertion of additional AMPA receptors into the synapse.</li>
+<li>Over longer timescales, activates gene transcription to grow new dendritic spines.</li>
+</ul>
+</li>
+<li>Result: the synapse is now <em>stronger</em> — the same presynaptic signal produces a larger postsynaptic response.</li>
+</ol>
+<p><strong>Hebb&#39;s Rule:</strong> &quot;Neurons that fire together, wire together.&quot; LTP is the molecular implementation of Hebbian learning. The NMDA receptor acts as a <strong>coincidence detector</strong> — it only unblocks and allows Ca²⁺ entry when both presynaptic activity (glutamate binding) and postsynaptic depolarization (from other simultaneous inputs) co-occur. This conjunction requirement is why correlated activity — but not uncorrelated activity — strengthens connections.</p>
+<h3 id="long-term-depression-ltd-weakening">Long-Term Depression (LTD) — Weakening</h3>
+<p>LTD is the complementary process: <strong>long-lasting decrease in synaptic efficacy</strong> following low-frequency stimulation or asynchronous activation. It removes memories and reduces noise. The molecular mechanism is broadly the reverse of LTP: lower Ca²⁺ influx activates phosphatases (rather than kinases), leading to AMPA receptor removal from synapses.</p>
+<p>During SWR-associated replay, LTD occurs at synapses of irrelevant memory traces (reducing their signal), while LTP occurs at synapses of the replayed trace (strengthening them). This sharpens the signal-to-noise ratio of stored memories.</p>
+<h3 id="spike-timing-dependent-plasticity-stdp">Spike-Timing-Dependent Plasticity (STDP)</h3>
+<p>STDP is a more refined form of Hebbian plasticity. The direction and magnitude of weight change depends on the <strong>precise millisecond timing</strong> of pre- and postsynaptic spikes:</p>
+<ul>
+<li><strong>Pre before post (causal, within ~20ms):</strong> LTP — the presynaptic cell&#39;s activity predicts the postsynaptic cell&#39;s activity; strengthen the connection.</li>
+<li><strong>Post before pre (anti-causal):</strong> LTD — the postsynaptic cell fired before the presynaptic cell; the connection was not causal; weaken it.</li>
+</ul>
+<p>STDP is the neural implementation of <strong>temporal causality detection</strong> — the brain literally learns which neurons cause the firing of others based on precise timing. This mechanism is key to how the hippocampus learns <strong>temporal sequences</strong> (A causes B causes C) rather than just co-occurrence.</p>
+<h3 id="behavioral-timescale-synaptic-plasticity-btsp">Behavioral Timescale Synaptic Plasticity (BTSP)</h3>
+<p>A newer mechanism (identified ~2019), BTSP operates on <strong>second-long timescales</strong> rather than millisecond STDP timescales. A single strong input at a behavioral timescale can create a lasting &quot;plateau potential&quot; in a dendrite that induces plasticity over a ~1-2 second window. BTSP is particularly important for encoding spatial context — it allows a single pass through an environment to create strong place-cell representations, without needing repeated exposures.</p>
+<p>BTSP helps explain how a salient event can alter place-cell representations after limited exposure. Whether a single event produces durable learning depends on the circuit and experimental conditions.</p>
+<h3 id="structural-plasticity-dendritic-spines">Structural plasticity — dendritic spines</h3>
+<p>Beyond synaptic weight changes, neurons physically grow and retract <strong>dendritic spines</strong> (small protrusions that form the postsynaptic membrane of most excitatory synapses). Strong LTP leads to spine growth (adding new connection surface area). LTD leads to spine shrinkage or retraction. Over weeks and months, structural changes encode the consolidated version of a memory.</p>
+<h3 id="metaplasticity-the-plasticity-of-plasticity">Metaplasticity — the plasticity of plasticity</h3>
+<p><strong>Metaplasticity</strong> is the modulation of the threshold for LTP/LTD induction. If a neuron has recently been very active, its threshold for LTP induction rises (making further LTP harder to induce) and its threshold for LTD falls. If it has been relatively quiescent, the reverse occurs. This homeostatic mechanism prevents runaway potentiation and keeps neurons in an operating range where they can still discriminate between important and unimportant inputs.</p>
+<hr>
+<h2 id="10-trajectory-creation-how-the-brain-chains-memories-into-sequences">10. Trajectory Creation — How the Brain Chains Memories Into Sequences</h2>
+<p>The brain can retrieve <strong>sequences</strong>, <strong>paths</strong>, and <strong>trajectories</strong> through memory space, not only isolated facts.</p>
+<h3 id="place-cells-and-cognitive-maps">Place cells and cognitive maps</h3>
+<p><strong>Place cells</strong> (CA1, CA3) are neurons that fire specifically when an animal occupies a particular location in an environment. Each place cell has a <strong>place field</strong> — a roughly circular region of space in which it fires. Together, the population of place cells forms a <strong>cognitive map</strong> of the environment.</p>
+<p>Key properties:</p>
+<ul>
+<li>Place fields are <strong>allocentric</strong> (world-centered), not egocentric (body-centered).</li>
+<li>They remap entirely when the animal enters a new environment (<strong>global remapping</strong>) or when task demands change significantly (<strong>partial remapping</strong>).</li>
+<li>They can represent <strong>conceptual spaces</strong> (abstract task states, social hierarchies, decision trees) in addition to physical spaces.</li>
+</ul>
+<h3 id="the-cognitive-map-as-a-general-memory-structure">The cognitive map as a general memory structure</h3>
+<p>The discovery of place cells (John O&#39;Keefe, Nobel Prize 2014) revealed that the hippocampus constructs not just spatial maps but <strong>relational maps</strong> — structures that encode the relationships between elements of an experience. &quot;Where,&quot; &quot;when,&quot; &quot;what,&quot; and &quot;who&quot; are all mapped in the hippocampal-entorhinal system using related cell types:</p>
+<table>
+<thead>
+<tr>
+<th>Cell type</th>
+<th>What it encodes</th>
+<th>Location</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Place cells</strong></td>
+<td>Location in environment</td>
+<td>CA1, CA3</td>
+</tr>
+<tr>
+<td><strong>Grid cells</strong></td>
+<td>Abstract metric space</td>
+<td>MEC</td>
+</tr>
+<tr>
+<td><strong>Head direction cells</strong></td>
+<td>Which way you&#39;re facing</td>
+<td>MEC, subiculum</td>
+</tr>
+<tr>
+<td><strong>Border cells</strong></td>
+<td>Walls and boundaries</td>
+<td>MEC</td>
+</tr>
+<tr>
+<td><strong>Time cells</strong></td>
+<td>Elapsed time within an episode</td>
+<td>CA1, EC</td>
+</tr>
+<tr>
+<td><strong>Object-vector cells</strong></td>
+<td>Distance and direction to specific objects</td>
+<td>EC, subiculum</td>
+</tr>
+<tr>
+<td><strong>Concept cells</strong></td>
+<td>Abstract concepts, people, ideas</td>
+<td>Human MTL</td>
+</tr>
+</tbody></table>
+<p>The <strong>time cells</strong> deserve special mention: neurons in CA1 and the entorhinal cortex fire at specific moments within an unfolding episode, regardless of spatial location. They create a neural timeline of events, with each time cell acting as a &quot;timestamp&quot; marker. This is the biological mechanism for <strong>temporal sequencing</strong> of episodic memories — remembering not just that A and B happened, but that A happened before B, and by roughly how long.</p>
+<h3 id="theta-sequences-the-compressed-future">Theta sequences — the compressed future</h3>
+<p>During active behavior, within each theta cycle (~125ms), place cells fire in sequences that represent a <strong>trajectory ahead of the current position.</strong> As an animal approaches a choice point, different theta cycles represent different possible paths (alternating left-right in mazes), as if mentally simulating the options.</p>
+<p>This is the neural correlate of <strong>lookahead planning</strong> — evaluating multiple future trajectories before committing to one. The sequence is generated by the EC grid cells providing a &quot;look-ahead sweep&quot; of the grid, which then drives place cell sequences via the DG and CA3 attractor system.</p>
+<p><strong>Reverse replay:</strong> At the end of a rewarding experience, or during rest, hippocampal neurons replay the trajectory in <strong>reverse</strong> — from reward location back to start. This reverse replay is thought to propagate reward value backwards through the sequence, teaching the animal which prior states led to the reward (the neural basis of temporal credit assignment in reinforcement learning).</p>
+<h3 id="sharp-wave-ripple-replay-the-memory-consolidation-trajectory">Sharp-wave ripple replay — the memory consolidation trajectory</h3>
+<p>During SWRs (offline periods), hippocampal neurons replay entire trajectories in compressed form at 10–20× speed. Crucially:</p>
+<ol>
+<li><strong>Awake replay is prospective:</strong> Before an experience, neurons can replay likely future trajectories (preplay), suggesting the brain uses stored knowledge to plan.</li>
+<li><strong>Post-experience replay is retrospective:</strong> After a successful experience, the trajectory that led to the outcome is replayed, preferentially if it included reward or surprise.</li>
+<li><strong>Replay is not random:</strong> Experiences that led to reward, were novel, or were emotionally salient are replayed more frequently and for longer. This is the brain&#39;s <strong>selection mechanism</strong> — choosing which trajectories to consolidate into long-term memory.</li>
+</ol>
+<h3 id="the-entorhinal-cortex-as-a-trajectory-navigator">The Entorhinal Cortex as a trajectory navigator</h3>
+<p>The EC&#39;s sequential firing structure (time cells + grid cells) provides a <strong>global coordinate system</strong> that can chain hippocampal memories into ordered sequences. EC provides the &quot;next step&quot; signal: given current state X, which grid/place/time cell pattern should be active next?</p>
+<hr>
+<h2 id="11-memory-consolidation-from-hippocampus-to-neocortex">11. Memory Consolidation — From Hippocampus to Neocortex</h2>
+<h3 id="the-standard-consolidation-theory-sct">The standard consolidation theory (SCT)</h3>
+<p>Early theories of consolidation held that the hippocampus stores memories initially, then gradually transfers them to neocortex over weeks to years. Once fully consolidated, memories become hippocampus-independent. Evidence: remote memories (years old) are often spared in hippocampal amnesics like H.M., while recent memories are lost.</p>
+<h3 id="the-multiple-trace-theory-mtt">The Multiple Trace Theory (MTT)</h3>
+<p>MTT revises the standard theory: episodic, contextual memories (rich, vivid memories with spatial and temporal detail) remain hippocampus-dependent permanently. What gets transferred to neocortex is a <em>semantic gist</em> — the extracted, decontextualized facts stripped of their episodic context. H.M. could still know facts but could not remember the experience of learning them.</p>
+<h3 id="complementary-learning-systems-cls-addressed-in-14">Complementary Learning Systems (CLS) — addressed in §14</h3>
+<h3 id="the-mechanisms-how-consolidation-actually-happens">The mechanisms: how consolidation actually happens</h3>
+<p><strong>System consolidation (hippocampus → neocortex):</strong></p>
+<ol>
+<li>During NREM sleep, the hippocampus generates SWR events (~0.5–2Hz).</li>
+<li>Each SWR reactivates a hippocampal memory trace.</li>
+<li>The hippocampal output is coordinated with <strong>slow oscillations</strong> in PFC (0.5–1Hz) — specifically, SWRs occur preferentially during the &quot;up state&quot; of the slow oscillation, when cortical neurons are maximally excitable.</li>
+<li>Also nested within this: <strong>sleep spindles</strong> (12–15 Hz) in the thalamo-cortical system provide a window for LTP in neocortical synapses.</li>
+<li>The hippocampal pattern reactivated during SWRs is fed to the neocortex, inducing Hebbian changes in neocortical synapses.</li>
+<li>After many replay events over many sleep cycles, the neocortex has built its own representation of the information — and the hippocampus is no longer required to retrieve it.</li>
+</ol>
+<p><strong>Synaptic consolidation (within synapses):</strong></p>
+<ul>
+<li><strong>Immediate (minutes):</strong> Post-translational modifications — phosphorylation of existing AMPA receptors.</li>
+<li><strong>Hours:</strong> Local protein synthesis at the synapse — new AMPA receptors are inserted.</li>
+<li><strong>Days:</strong> Spine growth, axonal sprouting, structural remodeling.</li>
+<li><strong>Weeks–months:</strong> Full synaptic consolidation, integration into established cortical circuits.</li>
+</ul>
+<p><strong>Synaptic tagging and capture:</strong> A synapse that has received a weak stimulus (insufficient for late-phase LTP) can still undergo late-phase LTP if a &quot;flag&quot; (the synaptic tag) is set and a strong stimulus elsewhere in the neuron generates plasticity-related proteins (PRPs) that get captured by the tagged synapse. This mechanism allows the neuron to &quot;associate&quot; a weak input with a strong one across a timewindow of hours — the biological basis of <strong>binding</strong> distinct events that co-occur.</p>
+<hr>
+<h2 id="12-engrams-the-physical-trace-of-a-memory">12. Engrams — The Physical Trace of a Memory</h2>
+<h3 id="what-an-engram-is">What an engram is</h3>
+<p>The term &quot;engram&quot; (proposed by Richard Semon in 1904) refers to the physical change in the brain that constitutes a stored memory. For decades it was theoretical. Modern optogenetic and calcium-imaging tools have allowed engrams to be directly identified, manipulated, and even created artificially.</p>
+<h3 id="memory-index-theory">Memory Index Theory</h3>
+<p>The most influential current theory of hippocampal engrams is the <strong>Memory Index Theory</strong> (Teyler &amp; DiScenna, 1986; updated repeatedly since):</p>
+<ol>
+<li>During encoding, a subset of neurons across the neocortex is activated by the experience (the <strong>cortical pattern</strong>).</li>
+<li>The hippocampus encodes not the full experience itself but an <strong>index</strong> — a compressed pointer to the cortical pattern.</li>
+<li>During retrieval, a partial cue activates the hippocampal index, which then <strong>reinstates the original cortical activation pattern</strong>.</li>
+<li>This reinstatement of the original cortical pattern <em>is</em> the memory experience.</li>
+</ol>
+<p>Evidence: hippocampal inactivation during retrieval prevents neurons that were active during learning from being reactivated in the cortex — it disconnects the index from the cortical representation.</p>
+<p>Two distinct neural populations exist in CA1:</p>
+<ul>
+<li><strong>c-Fos+ (engram cells):</strong> Fire in an on-off, context-specific pattern. Represent the contextual identity (the &quot;index&quot;). These are the engram.</li>
+<li><strong>c-Fos- (place cells):</strong> Provide stable spatial information. These are the map.</li>
+</ul>
+<h3 id="engram-competition-and-updating">Engram competition and updating</h3>
+<p>Multiple memories can share neurons (overlapping engrams). When memories overlap too much, interference occurs. When a memory is reactivated, it becomes temporarily labile (a process called <strong>reconsolidation</strong>) and can be updated, strengthened, or even erased. This is the biological basis for:</p>
+<ul>
+<li><strong>Memory updating:</strong> Reactivation can make a memory susceptible to modification when new information is present.</li>
+<li><strong>Memory interference:</strong> Similar or overlapping traces can compete during recall.</li>
+</ul>
+<hr>
+<h2 id="13-adult-neurogenesis-structural-plasticity-in-the-dg">13. Adult Neurogenesis — Structural Plasticity in the DG</h2>
+<p>The dentate gyrus is one of only two brain regions (the other being the olfactory bulb) where new neurons continue to be generated in the adult brain.</p>
+<h3 id="the-lifecycle-of-a-new-neuron-in-the-dg">The lifecycle of a new neuron in the DG</h3>
+<ol>
+<li><strong>Proliferation:</strong> Neural stem cells in the subgranular zone of DG divide.</li>
+<li><strong>Differentiation:</strong> Daughter cells differentiate into immature granule cells (~2–4 weeks).</li>
+<li><strong>Integration:</strong> Immature neurons extend dendrites toward the molecular layer (receiving EC input) and axons toward CA3.</li>
+<li><strong>Maturation:</strong> Over 4–8 weeks, they integrate into the DG circuit, become less hyperexcitable, and acquire standard granule cell properties.</li>
+<li><strong>Survival or apoptosis:</strong> Only ~50% of new neurons survive long-term. Survival is promoted by:<ul>
+<li>Learning and cognitive activity</li>
+<li>Exercise (dramatically increases neurogenesis)</li>
+<li>Environmental enrichment</li>
+<li>BDNF (brain-derived neurotrophic factor)</li>
+<li>Reduced stress (chronic stress severely suppresses neurogenesis)</li>
+</ul>
+</li>
+</ol>
+<h3 id="what-new-neurons-do-functionally">What new neurons do functionally</h3>
+<p>Young adult-born neurons have a unique property: they are <strong>hyperexcitable</strong> and have <strong>lower LTP thresholds</strong> (they can be potentiated by weaker stimuli). This makes them excellent at encoding new, potentially conflicting information into the DG without disrupting existing representations.</p>
+<p>They are specifically important for <strong>pattern separation at fine scales</strong> — distinguishing between very similar events (same place, different day; same people, different context). They contribute to the sparsification of DG activity by activating local inhibitory interneurons when stimulated, suppressing neighboring granule cells.</p>
+<p><strong>Neurogenesis and forgetting:</strong> Paradoxically, increasing neurogenesis also increases <strong>forgetting of old memories.</strong> New neurons integrating into the DG circuit overwrite some of the old sparse codes, erasing old episodic details while preserving semantic generalizations. This is a feature, not a bug: it clears out overly detailed episodic memories that are no longer adaptive, while preserving important structural knowledge.</p>
+<hr>
+<h2 id="14-complementary-learning-systems-cls-theory">14. Complementary Learning Systems (CLS) Theory</h2>
+<p>First proposed by McClelland, McNaughton, and O&#39;Reilly (1995), CLS theory is one of the most influential frameworks for understanding why memory requires two systems.</p>
+<h3 id="the-core-insight-catastrophic-interference">The core insight: catastrophic interference</h3>
+<p>Artificial neural networks that learn by gradient descent suffer from <strong>catastrophic interference</strong> (also called catastrophic forgetting): when trained on task B after task A, learning on B overwrites the weights needed for task A, destroying task A performance entirely. Biological brains don&#39;t do this — humans can learn thousands of new facts without forgetting their childhood memories.</p>
+<p>The solution CLS proposes: <strong>two complementary systems with opposite properties.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Hippocampus</th>
+<th>Neocortex</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Learning speed</strong></td>
+<td>Fast (one-shot)</td>
+<td>Slow (requires many exposures)</td>
+</tr>
+<tr>
+<td><strong>Representation style</strong></td>
+<td>Sparse, orthogonal (pattern-separated)</td>
+<td>Dense, overlapping, distributed</td>
+</tr>
+<tr>
+<td><strong>Memory type</strong></td>
+<td>Episodic (specific events, rich context)</td>
+<td>Semantic (general knowledge, abstract facts)</td>
+</tr>
+<tr>
+<td><strong>Interference handling</strong></td>
+<td>Avoids it via sparsity</td>
+<td>Integrates across episodes to extract structure</td>
+</tr>
+<tr>
+<td><strong>Biological mechanism</strong></td>
+<td>Hebbian LTP via NMDA in DG/CA3</td>
+<td>Gradual weight updates via interleaved replay</td>
+</tr>
+</tbody></table>
+<h3 id="how-the-two-systems-interact">How the two systems interact</h3>
+<p>The hippocampus rapidly encodes individual experiences as crisp, contextualized episodic memories. Over many sleep cycles, hippocampal replay events interleave new experiences with old ones in the neocortex. This <strong>interleaved replay</strong> allows the neocortex to slowly extract the common structure across many episodes — building semantic knowledge that generalizes across contexts.</p>
+<p>The neocortex does not store the episode itself; it stores the <strong>generalized pattern</strong> (the gist). The hippocampus retains the episodic index.</p>
+<h3 id="why-replay-is-interleaved-not-blocked">Why replay is interleaved (not blocked)</h3>
+<p>McClelland et al. showed computationally that if you train the neocortex on new experiences all at once (blocked training), you get catastrophic interference. If you interleave new experiences with replays of old ones (interleaved training), the neocortex can integrate new information without forgetting old. This is exactly what SWR-driven replay achieves during sleep.</p>
+<hr>
+<h2 id="15-procedural-memory-and-the-basal-ganglia-the-other-memory-system">15. Procedural Memory and the Basal Ganglia — The Other Memory System</h2>
+<p>For completeness: the hippocampus is the substrate for <strong>declarative memory</strong> (explicit, consciously accessible facts and episodes). A second, distinct system handles <strong>procedural memory</strong> (implicit, skill-based, &quot;how-to&quot; knowledge that is not consciously accessible).</p>
+<table>
+<thead>
+<tr>
+<th>System</th>
+<th>Substrate</th>
+<th>Memory type</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Declarative</strong></td>
+<td>Hippocampus + MTL</td>
+<td>Episodic + Semantic</td>
+<td>Remembering your first day at work; knowing Paris is the capital of France</td>
+</tr>
+<tr>
+<td><strong>Procedural</strong></td>
+<td>Basal ganglia + cerebellum</td>
+<td>Skill + habit</td>
+<td>Riding a bike; typing; reaching for a glass without thinking</td>
+</tr>
+</tbody></table>
+<h3 id="the-basal-ganglia-as-a-habit-learner">The basal ganglia as a habit learner</h3>
+<p>The basal ganglia (striatum, substantia nigra, globus pallidus) implement <strong>reward-based reinforcement learning</strong> at the neural level. The key mechanism:</p>
+<ul>
+<li><strong>Dopamine</strong> signals the difference between expected and received reward (the <strong>reward prediction error</strong>).</li>
+<li>Dopamine release in the striatum modulates <strong>long-term potentiation</strong> at cortico-striatal synapses, strengthening the connection between the current state and the action that led to reward.</li>
+<li>Over repeated successful trials, the action sequence becomes encoded as a <strong>habit</strong> — a chunked motor program that fires automatically in the appropriate context, bypassing deliberate planning.</li>
+</ul>
+<p>The HIP/BG distinction maps onto the explicit/implicit memory distinction: the hippocampus stores &quot;I know that X leads to Y&quot; (declarative); the basal ganglia store &quot;when X happens, do Y&quot; without explicit knowledge of why (procedural habit).</p>
+<h3 id="skill-learning-habit-chunking-automaticity">Skill learning → habit chunking → automaticity</h3>
+<p>The progression in learning a new skill:</p>
+<ol>
+<li><strong>Explicit phase:</strong> Each step requires conscious attention; hippocampus active; slow and effortful.</li>
+<li><strong>Associative phase:</strong> Steps become more automatic; working memory load decreases; BG synaptic weights strengthening.</li>
+<li><strong>Autonomous phase:</strong> The skill is a &quot;chunk&quot; — a single BG program that fires as a unit, consuming almost no working memory.</li>
+</ol>
+<p>The shift from effortful practice to an automatic habit is associated with changing contributions from hippocampal and basal-ganglia systems.</p>
+<hr>
+<h2 id="16-glossary-of-key-terms">16. Glossary of Key Terms</h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Allocentric</strong></td>
+<td>Represents space/relationships in world-centered coordinates (independent of where you&#39;re standing)</td>
+</tr>
+<tr>
+<td><strong>Attractor</strong></td>
+<td>A stable state that a dynamical system tends toward; in neural networks, a stable firing pattern that the network settles into</td>
+</tr>
+<tr>
+<td><strong>Attractor basin</strong></td>
+<td>The region of state space from which the system converges to a given attractor</td>
+</tr>
+<tr>
+<td><strong>AMPA receptor</strong></td>
+<td>Ionotropic glutamate receptor that mediates fast excitatory synaptic transmission; inserted/removed at synapses to implement LTP/LTD</td>
+</tr>
+<tr>
+<td><strong>BDNF</strong></td>
+<td>Brain-derived neurotrophic factor; promotes neuron survival, growth, differentiation, and synaptogenesis; key regulator of adult neurogenesis</td>
+</tr>
+<tr>
+<td><strong>CA fields</strong></td>
+<td>Cornu Ammonis fields (1–4); the pyramidal cell layers of the hippocampus proper</td>
+</tr>
+<tr>
+<td><strong>CaMKII</strong></td>
+<td>Ca²⁺/calmodulin-dependent protein kinase II; molecular switch for LTP; activated by Ca²⁺ influx through NMDA receptors</td>
+</tr>
+<tr>
+<td><strong>Cognitive map</strong></td>
+<td>A neural representation of the structural relationships among elements of an environment or concept space</td>
+</tr>
+<tr>
+<td><strong>Declarative memory</strong></td>
+<td>Consciously accessible, explicitly reportable memories (episodic + semantic)</td>
+</tr>
+<tr>
+<td><strong>Dendrite</strong></td>
+<td>Branch-like extensions of a neuron that receive synaptic inputs</td>
+</tr>
+<tr>
+<td><strong>Dendritic spine</strong></td>
+<td>Small protrusion on a dendrite that forms the postsynaptic site of a synapse; structural unit of synaptic plasticity</td>
+</tr>
+<tr>
+<td><strong>Egocentric</strong></td>
+<td>Body-centered frame of reference</td>
+</tr>
+<tr>
+<td><strong>Engram</strong></td>
+<td>The physical neural change that constitutes a stored memory; a specific population of neurons whose activity patterns represent a memory</td>
+</tr>
+<tr>
+<td><strong>Episodic memory</strong></td>
+<td>Memory for specific, personally experienced events in their spatial and temporal context</td>
+</tr>
+<tr>
+<td><strong>Expansion recoding</strong></td>
+<td>Using many more output neurons than input neurons to create sparse, orthogonal codes</td>
+</tr>
+<tr>
+<td><strong>Excitatory postsynaptic potential (EPSP)</strong></td>
+<td>A depolarizing (positive voltage) change in the postsynaptic membrane induced by an excitatory synapse</td>
+</tr>
+<tr>
+<td><strong>Forward/reverse replay</strong></td>
+<td>Sequential reactivation of hippocampal place cells in the same (forward) or reverse (backward) order as the original experience</td>
+</tr>
+<tr>
+<td><strong>GABA</strong></td>
+<td>Gamma-aminobutyric acid; the primary inhibitory neurotransmitter</td>
+</tr>
+<tr>
+<td><strong>Glutamate</strong></td>
+<td>The primary excitatory neurotransmitter</td>
+</tr>
+<tr>
+<td><strong>Granule cell</strong></td>
+<td>Small neuron type; the dominant cell type of the dentate gyrus; produces sparse, orthogonal codes via inhibition</td>
+</tr>
+<tr>
+<td><strong>Grid cell</strong></td>
+<td>MEC neuron that fires at vertices of a hexagonal lattice covering the entire environment; provides the brain&#39;s metric system</td>
+</tr>
+<tr>
+<td><strong>Hebbian plasticity</strong></td>
+<td>&quot;Neurons that fire together, wire together&quot; — synaptic strengthening when pre- and postsynaptic cells co-activate</td>
+</tr>
+<tr>
+<td><strong>Hippocampus</strong></td>
+<td>Medial temporal lobe structure critical for episodic memory encoding and retrieval, spatial navigation, and novelty detection</td>
+</tr>
+<tr>
+<td><strong>Hilus / CA4</strong></td>
+<td>The region inside the DG curve; contains mossy cells and interneurons that modulate DG activity</td>
+</tr>
+<tr>
+<td><strong>LEC / MEC</strong></td>
+<td>Lateral/medial entorhinal cortex; LEC provides object identity; MEC provides spatial metric</td>
+</tr>
+<tr>
+<td><strong>LTD</strong></td>
+<td>Long-term depression; lasting decrease in synaptic efficacy</td>
+</tr>
+<tr>
+<td><strong>LTP</strong></td>
+<td>Long-term potentiation; lasting increase in synaptic efficacy</td>
+</tr>
+<tr>
+<td><strong>Metaplasticity</strong></td>
+<td>Plasticity of plasticity; activity-dependent regulation of the threshold for LTP/LTD induction</td>
+</tr>
+<tr>
+<td><strong>Mossy fibers</strong></td>
+<td>Axons from DG granule cells that project to CA3 pyramidal cells</td>
+</tr>
+<tr>
+<td><strong>NMDA receptor</strong></td>
+<td>Ionotropic glutamate receptor that also requires postsynaptic depolarization to open; acts as a coincidence detector; critical for LTP</td>
+</tr>
+<tr>
+<td><strong>Orthogonalization</strong></td>
+<td>Making representations non-overlapping; the computational goal of pattern separation</td>
+</tr>
+<tr>
+<td><strong>Parahippocampal cortex</strong></td>
+<td>Processes spatial/contextual information and projects to MEC; critical for &quot;where&quot; encoding</td>
+</tr>
+<tr>
+<td><strong>Pattern completion</strong></td>
+<td>Reconstructing a full stored memory from a partial cue; implemented by CA3&#39;s recurrent collaterals</td>
+</tr>
+<tr>
+<td><strong>Pattern separation</strong></td>
+<td>Transforming similar inputs into dissimilar, non-overlapping outputs; implemented by DG sparse coding</td>
+</tr>
+<tr>
+<td><strong>Perforant path</strong></td>
+<td>The main axonal pathway from EC layer II to DG and CA3</td>
+</tr>
+<tr>
+<td><strong>Perirhinal cortex</strong></td>
+<td>Processes object and familiarity information; projects to LEC; critical for &quot;what&quot; encoding</td>
+</tr>
+<tr>
+<td><strong>Place cell</strong></td>
+<td>Hippocampal neuron that fires when an animal is in a specific location (its &quot;place field&quot;)</td>
+</tr>
+<tr>
+<td><strong>Procedural memory</strong></td>
+<td>Implicit, skill-based memory; does not require conscious retrieval; stored in basal ganglia/cerebellum</td>
+</tr>
+<tr>
+<td><strong>Pyramidal cell</strong></td>
+<td>The dominant excitatory neuron type in CA3, CA1, and neocortex; large, with distinct apical and basal dendrites</td>
+</tr>
+<tr>
+<td><strong>Reconsolidation</strong></td>
+<td>The process by which a retrieved memory becomes temporarily labile and susceptible to modification</td>
+</tr>
+<tr>
+<td><strong>Recurrent collaterals</strong></td>
+<td>Axon branches from CA3 pyramidal cells that loop back to connect with other CA3 pyramidal cells; the physical substrate of the attractor network</td>
+</tr>
+<tr>
+<td><strong>Replay</strong></td>
+<td>Reactivation of a sequence of hippocampal neurons in a compressed time window during rest or sleep</td>
+</tr>
+<tr>
+<td><strong>Schaffer collaterals</strong></td>
+<td>Axon branches from CA3 pyramidal cells that project to CA1; one of the most-studied synapses in the brain</td>
+</tr>
+<tr>
+<td><strong>Semantic memory</strong></td>
+<td>General factual knowledge about the world, divorced from personal episodic context</td>
+</tr>
+<tr>
+<td><strong>Sharp-wave ripple (SWR)</strong></td>
+<td>High-frequency (~150 Hz) hippocampal oscillation occurring during rest/sleep; associated with memory replay and consolidation</td>
+</tr>
+<tr>
+<td><strong>Sleep spindle</strong></td>
+<td>12–15 Hz thalamo-cortical oscillation during NREM sleep; provides LTP windows in neocortical synapses during memory consolidation</td>
+</tr>
+<tr>
+<td><strong>Slow oscillation</strong></td>
+<td>~0.5–1 Hz cortical oscillation during NREM sleep; orchestrates the hippocampal SWR–cortical interaction</td>
+</tr>
+<tr>
+<td><strong>Sparse coding</strong></td>
+<td>Representation in which only a small fraction of neurons are active at any time; reduces interference between memories</td>
+</tr>
+<tr>
+<td><strong>STDP</strong></td>
+<td>Spike-timing-dependent plasticity; the direction of weight change depends on precise millisecond timing of pre/post spikes</td>
+</tr>
+<tr>
+<td><strong>Subiculum</strong></td>
+<td>Hippocampal output structure; relay between CA1 and EC/prefrontal cortex</td>
+</tr>
+<tr>
+<td><strong>Synapse</strong></td>
+<td>The junction between two neurons where neurotransmitters are released and received</td>
+</tr>
+<tr>
+<td><strong>Synaptic tagging and capture</strong></td>
+<td>A mechanism allowing a weakly stimulated synapse to undergo lasting potentiation if plasticity-related proteins are available from a nearby strong stimulus</td>
+</tr>
+<tr>
+<td><strong>Theta oscillation</strong></td>
+<td>4–10 Hz hippocampal rhythm during active exploration; organizes encoding (peak) and retrieval (trough) phases</td>
+</tr>
+<tr>
+<td><strong>Theta sequences</strong></td>
+<td>Within-theta-cycle firing sequences that represent a compressed trajectory ahead of current position</td>
+</tr>
+<tr>
+<td><strong>Time cell</strong></td>
+<td>Hippocampal / EC neuron that fires at a specific elapsed time within an episode; encodes &quot;when&quot;</td>
+</tr>
+<tr>
+<td><strong>Trisynaptic pathway</strong></td>
+<td>EC → DG → CA3 → CA1 — the three-synapse circuit fundamental to hippocampal memory processing</td>
+</tr>
+</tbody></table>
+<hr>
+</article></div>
+</main>
+</body>
+</html>

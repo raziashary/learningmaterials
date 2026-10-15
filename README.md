@@ -13,3 +13,5 @@ In the repository's **Settings → Pages**, set **Source** to **Deploy from a br
 3. Preview `index.html` locally and check the new link, then commit and push the changes to `main`.
 
 Only files in this repository are published. The original learning folders beside this repository stay local.
+
+The four converted research guides in `htmls/` are standalone HTML pages with project-specific material removed. Their original Markdown source files are not published here. Pages with equations load MathJax from jsDelivr; the text remains readable if that script is unavailable.

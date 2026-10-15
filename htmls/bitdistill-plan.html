@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="A staged research plan for distilling a 1.58-bit dense language model.">
+<title>BitDistill 4-Stage Plan · Razi Ashary</title>
+<style>
+:root{color-scheme:light dark;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f7f5f1;color:#21302d}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-width:0}a{color:#226f5e;text-underline-offset:3px}
+.topbar{position:sticky;top:0;z-index:5;background:#f7f5f1ee;backdrop-filter:blur(12px);border-bottom:1px solid #d8ded8}
+.topbar-inner{max-width:1220px;min-height:62px;margin:auto;padding:10px 24px;display:flex;align-items:center;gap:16px}
+.home-link{display:inline-block;flex-shrink:0;padding:8px 12px;border:1px solid #c9d6cc;border-radius:9px;text-decoration:none;font-size:.84rem;font-weight:700}
+.home-link:hover,.home-link:focus-visible{background:#e5eee7}.topbar-title{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:.85rem;color:#5a6b60}
+.layout{max-width:1220px;margin:0 auto;padding:42px 24px 100px;display:grid;grid-template-columns:250px minmax(0,1fr);align-items:start;gap:44px}
+.sidebar{position:sticky;top:90px;max-height:calc(100vh - 110px);overflow:auto;padding:8px 12px 16px 0;border-right:1px solid #d8ded8}
+.sidebar h2{margin:0 0 12px;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:#66776d}.sidebar ol,.mobile-toc ol{margin:0;padding-left:18px}.sidebar li,.mobile-toc li{margin:8px 0;line-height:1.35;font-size:.82rem}.sidebar a,.mobile-toc a{text-decoration:none}.sidebar a:hover,.mobile-toc a:hover{text-decoration:underline}
+.mobile-toc{display:none}.article{min-width:0;max-width:880px;line-height:1.75;font-size:1.02rem}.article h1,.article h2,.article h3,.article h4{line-height:1.2;letter-spacing:-.03em;scroll-margin-top:84px;color:#1c3430}
+.article h1{margin:0 0 12px;font-size:clamp(2.2rem,5vw,3.55rem);letter-spacing:-.055em}.article h2{margin:2.5em 0 .8em;padding-top:.1em;border-top:1px solid #d8ded8;font-size:1.68rem}.article h3{margin:2em 0 .65em;font-size:1.27rem}.article h4{margin:1.6em 0 .5em;font-size:1.08rem}
+.article p{margin:1em 0}.article ul,.article ol{padding-left:1.5em}.article li{margin:.35em 0}.article blockquote{margin:1.4em 0;padding:.5em 1.15em;border-left:4px solid #6da28e;background:#eaf2ed;border-radius:0 9px 9px 0}.article blockquote p{margin:.45em 0}
+.article pre,.article code{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace}.article pre{max-width:100%;overflow-x:auto;padding:16px 18px;border:1px solid #d8ded8;border-radius:10px;background:#eef1ed;font-size:.79em;line-height:1.55;tab-size:4}.article pre code{background:none;padding:0;border:0}.article :not(pre)>code{padding:.12em .3em;border-radius:4px;background:#edf0e9;font-size:.88em;overflow-wrap:anywhere}
+.article table{display:block;width:max-content;max-width:100%;overflow-x:auto;border-collapse:collapse;margin:1.5em 0;font-size:.86em;line-height:1.4}.article th,.article td{min-width:120px;padding:10px 12px;border:1px solid #d8ded8;text-align:left;vertical-align:top}.article th{background:#eaf2ed}.article hr{border:0;border-top:1px solid #d8ded8;margin:2.6em 0}.article mjx-container[display="true"]{max-width:100%;overflow-x:auto;overflow-y:hidden}
+.reading-note{margin:0 0 2.4rem;color:#687970;font-size:.85rem}.article img{max-width:100%;height:auto}
+@media(max-width:850px){.layout{display:block;padding:28px 18px 72px}.sidebar{display:none}.mobile-toc{display:block;margin:0 0 34px;padding:13px 16px;border:1px solid #d8ded8;border-radius:10px;background:#eef3ee}.mobile-toc summary{cursor:pointer;font-weight:700}.mobile-toc ol{margin-top:12px}.article{font-size:1rem}.article h2{font-size:1.48rem}.topbar-inner{padding:8px 18px;min-height:56px}}
+@media(prefers-color-scheme:dark){:root{background:#111917;color:#e5ece7}a{color:#8fd1b4}.topbar{background:#111917ee;border-color:#34443a}.home-link{border-color:#455b4c}.home-link:hover,.home-link:focus-visible{background:#24362b}.topbar-title,.reading-note{color:#a9b9ac}.sidebar{border-color:#34443a}.sidebar h2{color:#a9b9ac}.article h1,.article h2,.article h3,.article h4{color:#edf5ef}.article h2,.article hr{border-color:#34443a}.article blockquote,.mobile-toc{background:#1c3024;border-color:#4f7b60}.article pre{background:#151f19;border-color:#34443a}.article :not(pre)>code{background:#26362b}.article th,.article td{border-color:#34443a}.article th{background:#1c3024}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{.topbar,.sidebar,.mobile-toc{display:none!important}.layout{display:block;padding:0}.article{max-width:none;font-size:10.5pt;color:#111}.article h1,.article h2,.article h3,.article h4{color:#111}.article pre{white-space:pre-wrap;overflow:visible}.article table{max-width:none;overflow:visible}.article tr{break-inside:avoid}}
+</style>
+
+</head>
+<body>
+<header class="topbar"><div class="topbar-inner"><a class="home-link" href="../index.html">← Back to library</a><span class="topbar-title">BitDistill 4-Stage Plan</span></div></header>
+<main class="layout">
+<nav class="sidebar" aria-label="Contents"><h2>Contents</h2><ol><li><a href="#kimi-k2-5-1-58-bit-dense-student-via-bitnet-distillation">Kimi K2.5 → 1.58-bit Dense Student via BitNet Distillation</a></li><li><a href="#foundational-concepts">Foundational Concepts</a></li><li><a href="#stage-0-sanity-check">Stage 0: Sanity Check</a></li><li><a href="#stage-1-true-proof-of-concept">Stage 1: True Proof of Concept</a></li><li><a href="#stage-2-scale-validation">Stage 2: Scale Validation</a></li><li><a href="#stage-3-the-real-target">Stage 3: The Real Target</a></li><li><a href="#cross-stage-infrastructure">Cross-Stage Infrastructure</a></li><li><a href="#team-scaling-by-stage">Team Scaling by Stage</a></li><li><a href="#risk-register">Risk Register</a></li></ol></nav>
+<div><details class="mobile-toc"><summary>Contents</summary><ol><li><a href="#kimi-k2-5-1-58-bit-dense-student-via-bitnet-distillation">Kimi K2.5 → 1.58-bit Dense Student via BitNet Distillation</a></li><li><a href="#foundational-concepts">Foundational Concepts</a></li><li><a href="#stage-0-sanity-check">Stage 0: Sanity Check</a></li><li><a href="#stage-1-true-proof-of-concept">Stage 1: True Proof of Concept</a></li><li><a href="#stage-2-scale-validation">Stage 2: Scale Validation</a></li><li><a href="#stage-3-the-real-target">Stage 3: The Real Target</a></li><li><a href="#cross-stage-infrastructure">Cross-Stage Infrastructure</a></li><li><a href="#team-scaling-by-stage">Team Scaling by Stage</a></li><li><a href="#risk-register">Risk Register</a></li></ol></details><article class="article"><p class="reading-note">Research and learning notes · A staged research plan for distilling a 1.58-bit dense language model.</p><h1 id="bitdistill-4-stage-miniaturization-plan">BitDistill 4-Stage Miniaturization Plan</h1>
+<h2 id="kimi-k2-5-1-58-bit-dense-student-via-bitnet-distillation">Kimi K2.5 → 1.58-bit Dense Student via BitNet Distillation</h2>
+<blockquote>
+<p><strong>Objective:</strong> Prove the BitDistill pipeline (Wu et al., arXiv:2510.13998) at progressively larger scales, culminating in a 1.58-bit dense student distilled from Kimi K2.5 (1T parameter MoE teacher).</p>
+<p><strong>Method:</strong> BitDistill — a three-stage QAT framework combining SubLN architectural refinement, continual pre-training, and MiniLM-style multi-head attention + logits distillation.</p>
+<p><strong>End state:</strong> A 32–70B dense model with ternary {-1, 0, +1} weights, ~10× memory reduction, ~2.65× CPU inference speedup, running on a single high-end consumer GPU.</p>
+</blockquote>
+<hr>
+<h2 id="foundational-concepts">Foundational Concepts</h2>
+<p>Before any stage begins, the team must have a shared working understanding of the following. These are not tasks to complete — they are the conceptual substrate every engineering decision rests on.</p>
+<h3 id="1-58-bit-quantization">1.58-bit Quantization</h3>
+<p>Every weight in the model is mapped to one of three values: -1, 0, or +1. This is achieved via per-tensor quantization using the <code>absmean</code> function:</p>
+<pre><code>Q_w(W) = Δ · RoundClip(W / (Δ + ε), -1, 1)
+where Δ = mean(|W|)
+</code></pre>
+<p>Activations are kept at INT8 using per-token absmax quantization. Because <code>RoundClip</code> is non-differentiable, gradients during training are approximated using the Straight-Through Estimator (STE): the gradient flows as if the quantization step didn&#39;t exist. This is a known approximation with known failure modes — the team should read the original BitNet b1.58 paper before starting.</p>
+<h3 id="subln-sub-layer-normalization">SubLN (Sub-Layer Normalization)</h3>
+<p>The core architectural modification. In standard transformers, LayerNorm is applied only at block input (pre-norm). SubLN inserts additional RMSNorm layers at two positions inside each transformer block:</p>
+<ol>
+<li>Before the output projection of the Multi-Head Self-Attention (MHSA) block</li>
+<li>Before the output projection of the Feed-Forward Network (FFN) — specifically before <code>W_down</code> in a SwiGLU FFN</li>
+</ol>
+<p>The rationale: 1.58-bit quantization causes activation variance to explode at projection layers. SubLN variance-stabilizes the hidden states before they enter quantized linear operations. Without it, training is unstable and performance degrades predictably with model size.</p>
+<h3 id="the-three-bitdistill-training-stages">The Three BitDistill Training Stages</h3>
+<p>These map to the paper&#39;s Stage 1 / Stage 2 / Stage 3 and must be executed in this exact order:</p>
+<ul>
+<li><strong>Stage A — Modeling Refinement:</strong> Insert SubLN. Convert all linear weights to 1.58-bit representation. This produces an architecturally modified model that is immediately inferior — that&#39;s expected.</li>
+<li><strong>Stage B — Continual Pre-Training (CT):</strong> Train the modified model on a small general corpus (~10B tokens) using only standard language modeling loss. This reshapes the weight distribution from the initial near-Gaussian (FP16 inherited) toward the bimodal near-boundary distribution characteristic of models trained from scratch with ternary weights. This distribution shift is what makes downstream fine-tuning stable and scalable.</li>
+<li><strong>Stage C — Distillation Fine-Tuning:</strong> With the FP16 model as teacher and the CT-warmed student, apply combined logits distillation (KL divergence on softened outputs) + multi-head attention relation distillation (from MiniLM) + cross-entropy on the task data. The total loss is: <code>L = L_CE + λ·L_LD + γ·L_AD</code></li>
+</ul>
+<h3 id="why-the-staging-ladder-exists">Why the Staging Ladder Exists</h3>
+<p>The paper only validates BitDistill up to 4B parameters. Every stage in this plan answers a specific open question:</p>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Open Question Being Answered</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Stage 0</td>
+<td>Does our codebase correctly implement SubLN, STE, and the three-loss distillation?</td>
+</tr>
+<tr>
+<td>Stage 1</td>
+<td>Does BitDistill hold at 32B? Does 10B CT tokens converge weight distribution at this scale?</td>
+</tr>
+<tr>
+<td>Stage 2</td>
+<td>Does 10B CT tokens remain sufficient at 72B, or do we need 20–30B?</td>
+</tr>
+<tr>
+<td>Stage 3</td>
+<td>How do we bridge the MoE-to-dense knowledge gap when the teacher is an MoE model?</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="stage-0-sanity-check">Stage 0: Sanity Check</h2>
+<p><strong>Teacher:</strong> Qwen3-8B (FP16) → <strong>Student:</strong> 1.58-bit Qwen3-8B
+<strong>Duration:</strong> 2–3 weeks | <strong>Team:</strong> 2–3 people | <strong>Compute budget:</strong> ~USD 3,000–USD 6,000</p>
+<h3 id="goal">Goal</h3>
+<p>This stage produces zero scientific value. It exists entirely to validate that your engineering stack is correct before spending real money. The questions you are answering are: Did I implement SubLN correctly? Does STE gradient flow work in my framework? Do the three loss functions produce meaningful gradients? Does the training loop run for 10B tokens without crashing?</p>
+<h3 id="preparation">Preparation</h3>
+<p><strong>Environment setup:</strong> Configure a GPU training environment with PyTorch + HuggingFace Transformers. The team must decide and commit to a distributed training framework — either DeepSpeed ZeRO-2/3 or PyTorch FSDP. Both work; pick one and standardize. Set up experiment tracking (Weights &amp; Biases or equivalent) from day one.</p>
+<p><strong>Model acquisition:</strong> Download Qwen3-8B weights from HuggingFace. Verify the model can do a clean forward pass in FP16 before touching anything.</p>
+<p><strong>Dataset preparation:</strong> Download the FALCON RefinedWeb corpus subset (~10B tokens). Write a tokenization and data loading pipeline that produces batches of 512-token sequences. Verify no data leakage between CT and fine-tuning splits.</p>
+<p><strong>Baseline establishment:</strong> Fine-tune the unmodified FP16 Qwen3-8B on your chosen downstream task(s) using standard SFT. Record all benchmark numbers. This is your performance ceiling — every downstream number in this stage will be compared to it.</p>
+<h3 id="stage-a-subln-architectural-modification">Stage A: SubLN Architectural Modification</h3>
+<p>This is a model surgery task, not a training task. The deliverable is a modified version of Qwen3-8B&#39;s architecture with SubLN layers inserted.</p>
+<p><strong>What needs to be written:</strong> A model patching script that loads the original Qwen3-8B config and weight file, adds two new RMSNorm modules per transformer layer (one after MHSA concatenation, one after FFN gating), and saves the modified model. The original linear weights are then quantized in-place using the absmean function. The resulting checkpoint is larger in terms of python objects (new norm parameters) but the linear weights are now in INT format.</p>
+<p><strong>Verification:</strong> After modification, run a forward pass. Check that output logits are in a reasonable range (not NaN, not exploding). Check that the new SubLN modules have non-trivial scale parameters (they should initialize to 1.0 and not immediately die). Check that weight quantization produced the expected {-1, 0, +1} distribution by sampling 100 weight tensors and plotting their histograms.</p>
+<p><strong>What correct SubLN insertion looks like:</strong> In the MHSA block, the computation order changes from <code>Y = X + Attention(X) @ W_out</code> to <code>Y = X + SubLN(Attention(X)) @ W_out</code>. In the FFN block (SwiGLU), the computation changes from <code>X_next = Y + (Y @ W_up ⊙ σ(Y @ W_gate)) @ W_down</code> to <code>X_next = Y + SubLN((Y @ W_up ⊙ σ(Y @ W_gate))) @ W_down</code>. This needs to be reflected in the model&#39;s forward pass code, not just the weight file.</p>
+<h3 id="stage-b-continual-pre-training">Stage B: Continual Pre-Training</h3>
+<p>Train the SubLN-modified, 1.58-bit quantized Qwen3-8B on ~10B tokens of FALCON corpus using standard causal language modeling loss. No task data. No teacher.</p>
+<p><strong>Training configuration to determine:</strong> Learning rate (start with 1e-4, with warmup over first 500M tokens then cosine decay), batch size (effective ~1M tokens/step), max sequence length 512–2048, gradient clipping at 1.0. All decisions should be logged.</p>
+<p><strong>What to monitor:</strong> Training loss curve — it should descend smoothly and not spike. Weight distribution at checkpoints — at the end of Stage B, weight histograms should show the characteristic bimodal shape (mass concentrated near the -1/0 and 0/+1 transition boundaries) that Figure 2 in the BitDistill paper demonstrates. If they still look Gaussian, CT did not converge. Either train more tokens or reduce the learning rate.</p>
+<p><strong>Checkpoint frequency:</strong> Save every 500M tokens. These checkpoints are your diagnostic trail.</p>
+<h3 id="stage-c-distillation-fine-tuning">Stage C: Distillation Fine-Tuning</h3>
+<p>Fine-tune the CT-warmed student using the three-loss objective, with the FP16 Qwen3-8B as teacher.</p>
+<p><strong>What needs to be written:</strong> A training loop that runs both teacher and student in the same process (teacher in eval mode, student in train mode), computes the three losses, and backpropagates only through the student. Memory management is the key engineering challenge here — at 8B, the teacher requires ~16GB FP16 and the student ~2GB 1.58-bit, so this fits on a single A100.</p>
+<p><strong>Loss function implementation:</strong> Three components:</p>
+<ul>
+<li><code>L_CE</code>: Standard cross-entropy between student predictions and ground truth labels</li>
+<li><code>L_LD</code>: KL divergence between softened teacher logit distribution and softened student logit distribution. Temperature τ = 5.0. Both distributions are softmax(logits/τ).</li>
+<li><code>L_AD</code>: Multi-head attention relation distillation at a <strong>single selected layer</strong> (not all layers). For the Q, K, and V projections at that layer, compute the self-relation matrix (QQ^T, KK^T, VV^T) for both teacher and student separately, apply softmax, and compute KL divergence. Apply to the final 20% of layers by default (layers 6–8 of 9 for 8B). Run a sweep over layer indices during Stage 0 — the paper finds later layers consistently outperform earlier ones, but the exact optimum varies by model.</li>
+</ul>
+<p><strong>Coefficient tuning:</strong> The paper uses λ=10, γ=1e5 for classification and λ=1, γ=1e3 for summarization. These are not universal. For Stage 0, run 4–6 short coefficient sweeps on a 100M-token mini-run before the full distillation. Log <code>L_CE</code>, <code>L_LD</code>, and <code>L_AD</code> separately and verify no single loss dominates to zero.</p>
+<h3 id="stage-0-exit-criteria">Stage 0 Exit Criteria</h3>
+<p>Before moving to Stage 1, all of the following must be true:</p>
+<ul>
+<li><input disabled="" type="checkbox"> Training completes 10B CT tokens without NaN/divergence</li>
+<li><input disabled="" type="checkbox"> Weight histograms post-CT show bimodal near-boundary distribution</li>
+<li><input disabled="" type="checkbox"> Distillation fine-tuning runs without errors across at least one full epoch</li>
+<li><input disabled="" type="checkbox"> Student achieves &gt;90% of FP16 teacher performance on the chosen benchmark</li>
+<li><input disabled="" type="checkbox"> Inference runs correctly in bitnet.cpp or equivalent 1.58-bit runtime</li>
+<li><input disabled="" type="checkbox"> All code is version-controlled, all experiments are logged, all checkpoints are saved</li>
+</ul>
+<hr>
+<h2 id="stage-1-true-proof-of-concept">Stage 1: True Proof of Concept</h2>
+<p><strong>Teacher:</strong> Qwen3-32B (FP16) → <strong>Student:</strong> 1.58-bit Qwen3-32B
+<strong>Duration:</strong> 6–10 weeks | <strong>Team:</strong> 4–6 people | <strong>Compute budget:</strong> ~USD 30,000–USD 60,000</p>
+<h3 id="goal-2">Goal</h3>
+<p>This is the stage with genuine scientific value. Qwen3-32B is the largest pure standard transformer in the Qwen3 dense family — the same architectural family as the models the BitDistill paper tested. Passing this stage with strong results gives you a legitimately publishable result: BitDistill confirmed to scale to 32B parameters.</p>
+<p>The primary scientific question is: does the 10B continual pre-training token budget that the paper used for ≤4B models converge the weight distribution at 32B? If not, what is the right budget?</p>
+<h3 id="preparation-2">Preparation</h3>
+<p><strong>Compute planning:</strong> At 32B parameters, a single training run of 10B CT tokens requires roughly 8–16× H100s for a reasonable wall-clock time (2–3 weeks). You must have a cloud compute contract or reserved GPU capacity before starting. Plan for at least 2 full training runs plus ablation capacity.</p>
+<p><strong>Scaled data pipeline:</strong> The tokenization pipeline from Stage 0 must now handle parallel data loading across multiple nodes. Verify your data loader saturates GPU compute — a common bottleneck at this scale.</p>
+<p><strong>Teacher availability:</strong> The FP16 Qwen3-32B teacher must be available for inference during Stage C. At 32B FP16, this requires ~65GB VRAM. Teacher and student will run simultaneously during distillation — plan your memory budget accordingly. With 4× H100 (320GB total), teacher runs on 1–2 GPUs, student on the remaining.</p>
+<h3 id="new-engineering-work-in-stage-1">New Engineering Work in Stage 1</h3>
+<p><strong>Distributed training correctness:</strong> The SubLN insertion, STE gradient flow, and three-loss distillation must all work correctly under tensor parallelism and/or FSDP. This requires explicit verification — bugs in gradient synchronization across ranks are silent and produce subtly wrong training dynamics.</p>
+<p><strong>Attention distillation under tensor parallelism:</strong> When attention heads are split across GPUs, computing the cross-model self-relation matrix (teacher vs student) requires gathering head outputs. Write a utility that correctly gathers and aligns attention states across ranks before computing <code>L_AD</code>. Test this on a 2-GPU run before scaling to 8+.</p>
+<p><strong>Memory-efficient teacher inference:</strong> The teacher runs in eval mode with no gradient storage. Use <code>torch.no_grad()</code> and optionally FP8 precision for teacher inference to halve its memory footprint. The teacher&#39;s intermediate activations (hidden states at the distillation layer) must be captured and passed to the student loss computation — implement this as a forward hook rather than modifying the teacher&#39;s forward pass.</p>
+<p><strong>Checkpoint sharding:</strong> At 32B, model checkpoints are 60–130GB depending on precision. Implement sharded checkpoint saving and loading. Verify that resuming from a checkpoint produces identical training dynamics to a run that never interrupted.</p>
+<h3 id="stage-b-at-32b-scale-the-key-diagnostic">Stage B at 32B Scale: The Key Diagnostic</h3>
+<p>The most important thing to measure during Stage B (CT) at 32B is whether 10B tokens is enough. Do this by saving checkpoints at 2B, 5B, 7B, and 10B tokens, then running Stage C (distillation fine-tuning) from each checkpoint on a short benchmark task. Plot performance vs CT tokens consumed. Look for the point of diminishing returns. If performance is still improving significantly at 10B tokens, you need to extend to 15B or 20B. This diagnostic run is not optional — it provides the data that Stage 2 planning depends on.</p>
+<h3 id="stage-c-distillation-at-32b">Stage C: Distillation at 32B</h3>
+<p>The same three-loss framework as Stage 0, now at 32B scale.</p>
+<p><strong>Key difference:</strong> The optimal distillation layer index from Stage 0 may not transfer. At 32B (64 layers vs 36 for 8B), the &quot;final 20% of layers&quot; heuristic points to layers 52–64. Run a compressed 5-layer sweep before the full distillation run to confirm.</p>
+<p><strong>Coefficient behavior at scale:</strong> The paper shows λ and γ do not need to scale with model size — they are task-dependent, not size-dependent. Use Stage 0 values as starting point and verify loss component balance in the first 1000 steps before committing to a full run.</p>
+<h3 id="performance-expectations">Performance Expectations</h3>
+<p>Based on the paper&#39;s scaling behavior:</p>
+<ul>
+<li>Classification tasks (MNLI, QNLI, SST-2): expect 98–100% of FP16 performance</li>
+<li>Summarization (CNNDM ROUGE scores): expect 97–99% of FP16 performance</li>
+<li>Hard reasoning benchmarks: expect 90–95% of FP16 performance</li>
+</ul>
+<p>If performance is below these ranges and the paper&#39;s benchmarks hold, the most likely culprits in order of probability: insufficient CT tokens, incorrect SubLN insertion, miscalibrated loss coefficients, and distributed training gradient errors.</p>
+<h3 id="stage-1-exit-criteria">Stage 1 Exit Criteria</h3>
+<ul>
+<li><input disabled="" type="checkbox"> CT weight distribution convergence confirmed at 10B tokens (or documented that more tokens are needed)</li>
+<li><input disabled="" type="checkbox"> Student achieves ≥95% of FP16 teacher performance on at least two standard benchmarks</li>
+<li><input disabled="" type="checkbox"> Distillation layer sweep completed and optimal layer documented</li>
+<li><input disabled="" type="checkbox"> Inference validated on CPU with bitnet.cpp, throughput and memory numbers recorded</li>
+<li><input disabled="" type="checkbox"> Ablation table documenting effect of each stage (A, B, C) individually</li>
+<li><input disabled="" type="checkbox"> Results are publication-quality — write them up in a 2–4 page technical report</li>
+</ul>
+<hr>
+<h2 id="stage-2-scale-validation">Stage 2: Scale Validation</h2>
+<p><strong>Teacher:</strong> Qwen2.5-72B (FP16) → <strong>Student:</strong> 1.58-bit Qwen2.5-72B
+<strong>Duration:</strong> 12–16 weeks | <strong>Team:</strong> 8–11 people | <strong>Compute budget:</strong> ~USD 100,000–USD 150,000</p>
+<h3 id="goal-3">Goal</h3>
+<p>Validate that the BitDistill pipeline scales to 72B dense parameters. The primary unknowns at this scale are: (1) whether the CT token budget needs to increase beyond 10B, and (2) whether the simultaneous teacher+student VRAM footprint creates engineering constraints that require architectural solutions.</p>
+<p>Qwen2.5-72B is chosen because it is the largest open-source dense Qwen model (80 layers, 72.7B params, GQA with 64 Q / 8 KV heads, 128K context, trained on 18T tokens), has the same GQA + SwiGLU + RMSNorm + RoPE architecture as the Qwen3 family, and is fully open-weight under Apache 2.0.</p>
+<h3 id="new-engineering-challenges-at-72b">New Engineering Challenges at 72B</h3>
+<p><strong>Memory budget for teacher+student co-training:</strong> The FP16 teacher is ~145GB. The 1.58-bit student is ~14–18GB of weights, but during training, gradient and optimizer states push effective memory to ~100–140GB. Combined, you need ~280–320GB of GPU memory. A 4× H100 node (320GB) is exactly sufficient. Plan training to use teacher on 2 GPUs in inference mode, student on all 4 GPUs in training mode with FSDP. Any memory budget overrun will OOM silently or cause crashes.</p>
+<p><strong>SubLN at 80 layers:</strong> Stage 0 and 1 SubLN insertion was at 36 and 64 layers respectively. At 80 layers and hidden size 8192, each SubLN module has 8192 learnable scale parameters. Total new parameters from SubLN: 80 × 2 × 8192 = ~1.3M. Negligible vs 72B total but must be initialized correctly (scale=1.0, no bias in RMSNorm).</p>
+<p><strong>GQA-aware attention distillation:</strong> Qwen2.5-72B uses GQA with 64 Q heads and 8 KV heads. The attention relation matrix computation in Stage C must handle this correctly — do not naively compute QQ^T with the 8-head KV tensors expanded to 64 heads without verifying this is mathematically sound. The paper&#39;s implementation computed relations on the raw Q, K, V projections before any head expansion. Verify this against the paper&#39;s algorithm pseudocode (Algorithm 1).</p>
+<p><strong>Gradient checkpointing:</strong> At 72B with long sequences, intermediate activations alone can exhaust memory. Enable activation checkpointing (recompute on backward pass) on all transformer layers. This halves memory at the cost of ~30% more compute. It is necessary, not optional.</p>
+<h3 id="ct-token-budget-determination">CT Token Budget Determination</h3>
+<p>The most important deliverable of Stage 2 is a definitive answer to the CT token budget question at 72B scale.</p>
+<p><strong>Proposed approach:</strong> Run CT at 72B to 30B tokens total, saving checkpoints every 5B tokens. At each checkpoint, run a fast 500M-token distillation fine-tune on a benchmark task. Plot performance as a function of CT tokens. The knee of the curve is your required budget. Budget for this diagnostic to cost 40–50% of the total Stage 2 compute allocation.</p>
+<p><strong>If the knee is at 10B tokens:</strong> You can apply the same budget to Stage 3 (Kimi K2.5).
+<strong>If the knee is at 20–25B tokens:</strong> Stage 3 planning needs to be revised upward accordingly.</p>
+<h3 id="stage-c-specifics-at-72b">Stage C Specifics at 72B</h3>
+<p>The key implementation question is whether to use a single-GPU teacher or a sharded teacher for distillation. Options:</p>
+<p><strong>Option A — FP8 teacher on 2 GPUs (recommended):</strong> Convert teacher weights to FP8 before distillation. FP8 at 72B occupies ~72GB — fits on 2× H100s with some KV cache headroom. This keeps teacher inference fast and reduces memory pressure on student training GPUs. Risk: FP8 teacher accuracy must be verified to be within 0.5% of BF16 teacher on the distillation task before committing.</p>
+<p><strong>Option B — Full BF16 teacher on 4 GPUs, student on 4 GPUs using an 8-GPU node:</strong> Simpler memory model, but requires an 8× H100 node (~USD 25–30/hr on cloud). Appropriate if FP8 conversion introduces noticeable accuracy drop.</p>
+<h3 id="inference-validation">Inference Validation</h3>
+<p>At the conclusion of Stage 2, run the 1.58-bit student through the bitnet.cpp inference engine (or equivalent ternary-weight-optimized runtime) on CPU. Measure:</p>
+<ul>
+<li>Tokens per second on 32-core CPU</li>
+<li>Peak RAM usage</li>
+<li>Comparison to FP16 inference speed and memory</li>
+</ul>
+<p>These numbers are the business case for the entire project. They should be ~2.65× faster and ~10× more memory-efficient than FP16 — consistent with the paper&#39;s claims at smaller scales.</p>
+<h3 id="stage-2-exit-criteria">Stage 2 Exit Criteria</h3>
+<ul>
+<li><input disabled="" type="checkbox"> CT token budget for 72B documented with empirical convergence curve</li>
+<li><input disabled="" type="checkbox"> Student achieves ≥95% of FP16 teacher on classification and ≥97% on summarization</li>
+<li><input disabled="" type="checkbox"> GQA attention distillation correctness verified against expected behavior</li>
+<li><input disabled="" type="checkbox"> FP8 teacher accuracy impact measured and documented</li>
+<li><input disabled="" type="checkbox"> CPU inference numbers measured (tok/s, RAM) and compared to FP16 baseline</li>
+<li><input disabled="" type="checkbox"> Technical report updated with 72B results</li>
+</ul>
+<hr>
+<h2 id="stage-3-the-real-target">Stage 3: The Real Target</h2>
+<p><strong>Teacher:</strong> Kimi K2.5 (1T MoE, 32B active) → <strong>Student:</strong> 1.58-bit Dense 32B–70B
+<strong>Duration:</strong> 20–30 weeks | <strong>Team:</strong> 15–20 people | <strong>Compute budget:</strong> ~USD 1.5M–USD 3.5M</p>
+<h3 id="goal-4">Goal</h3>
+<p>Produce a 1.58-bit dense model that distills the knowledge of Kimi K2.5 — a 1-trillion parameter MoE model with 384 experts, 32B active parameters per token, 15T token training, native multimodal capabilities, and state-of-the-art agentic performance. The student is a dense 32–70B model with ternary weights, deployable on 1–2 consumer GPUs.</p>
+<h3 id="the-fundamental-new-challenge-moe-to-dense-distillation">The Fundamental New Challenge: MoE-to-Dense Distillation</h3>
+<p>Everything up to Stage 2 was dense teacher → dense student. Stage 3 introduces a qualitatively different problem: <strong>the teacher activates only 8 of its 384 experts per token.</strong> Different input sequences route to different experts. Any single forward pass through the teacher captures only ~2% of its total parameter knowledge. The student, being dense, must learn to represent all 384 experts&#39; knowledge in its unified parameter space.</p>
+<p>This is not a solved problem at this scale. The known challenge: if you train the student only on data distributions that consistently route to the same few experts, the student learns only those experts&#39; behaviors. You need to ensure sufficient expert coverage during the CT and distillation phases.</p>
+<h3 id="teacher-infrastructure">Teacher Infrastructure</h3>
+<p>Running Kimi K2.5 inference at scale for distillation data generation is the largest single engineering challenge of the project.</p>
+<p><strong>What needs to be built:</strong> A teacher inference pipeline capable of generating and caching soft logits (probability distributions over the vocabulary) + intermediate hidden states (at the distillation layer) for a large corpus. This pipeline must:</p>
+<ul>
+<li>Run Kimi K2.5 in distributed mode across at least 16× H100s (model requires ~600GB at FP16, fits on 8× H100s with tensor parallelism but needs headroom)</li>
+<li>Cache output logits (top-K=1000 tokens sufficient, not full 164K vocab) to disk in a compressed format</li>
+<li>Cache hidden states at the selected distillation layer</li>
+<li>Process tokens at roughly 2,000–3,000 tok/s sustained throughput</li>
+<li>Be fault-tolerant (teacher inference should resume from checkpoint, not restart)</li>
+</ul>
+<p><strong>Storage requirement:</strong> Top-1000 logits per token × 32-bit float × 10B tokens = ~40TB. This is a significant infrastructure cost. Use FP16 logit storage to halve this to ~20TB.</p>
+<p><strong>Alternative approach — online distillation:</strong> Rather than pre-caching, run teacher inference online during student training. This doubles the per-step compute cost but eliminates the storage requirement. At 32B active teacher parameters, online inference adds roughly 40–60% overhead to the training step. Evaluate against cached approach based on your compute/storage cost ratio.</p>
+<h3 id="expert-coverage-strategy">Expert Coverage Strategy</h3>
+<p>To ensure the student learns from all 384 experts, the training corpus must be carefully constructed to maximize routing diversity.</p>
+<p><strong>What needs to be assembled:</strong> A curriculum dataset that includes highly diverse content types: mathematical proofs, source code in 30+ programming languages, scientific literature, creative writing, multilingual documents (Kimi K2.5 supports 164K vocab including many non-Latin scripts), structured data (tables, JSON, code with comments), and multi-turn conversation. The hypothesis is that expert routing correlates with content domain — different experts specialize in different modalities and subjects. A diverse curriculum forces the teacher to route through most of its expert space.</p>
+<p><strong>Diagnostic:</strong> After caching teacher outputs on the curriculum, analyze routing statistics. Compute, for each of the 384 experts, what fraction of the cached tokens activated that expert. If any expert has &lt;0.1% activation rate, that domain is underrepresented in the curriculum and the student will not learn it. Expand the curriculum in those domains.</p>
+<h3 id="student-architecture-decision">Student Architecture Decision</h3>
+<p>The student is a new dense model, not a modified version of any existing model. You must choose its architecture.</p>
+<p><strong>Option A — Qwen3-32B architecture as student:</strong> This is the lowest-risk option. The architecture is identical to Stage 1&#39;s student. SubLN insertion is already validated at this scale. Fine-tuning recipes, evaluation harnesses, and inference code all transfer directly.</p>
+<p><strong>Option B — 70B dense student:</strong> Larger capacity = better knowledge absorption from the 1T teacher. But validation at 70B requires extending Stage 2&#39;s work, and the simultaneous teacher (Kimi K2.5 at ~600GB FP16) + student (70B in training mode at ~140GB BF16 + optimizer states) VRAM budget requires a 16× H100 node. More expensive and higher risk.</p>
+<p><strong>Recommended start:</strong> Begin with Qwen3-32B architecture student. If performance ceiling is unsatisfactory after Stage 3 first run, extend to 70B for a second run.</p>
+<h3 id="vision-and-multimodality-handling">Vision and Multimodality Handling</h3>
+<p>Kimi K2.5 is a native multimodal model with a 200M parameter MoonViT3d vision encoder. For Stage 3, a pragmatic decision must be made:</p>
+<p><strong>Approach A — Text-only student:</strong> The student is a text-only LLM. Distillation uses only text tokens. The teacher&#39;s MoonViT3d encoder is not used. The student inherits K2.5&#39;s text-domain reasoning and coding intelligence but not its vision capabilities. This is 80–90% of K2.5&#39;s value and 50% of the complexity.</p>
+<p><strong>Approach B — Multimodal student:</strong> The student includes a lightweight vision encoder (e.g., a frozen CLIP ViT-L or a distilled version of MoonViT3d). Distillation includes image-text pairs and video-text pairs. Far more complex but produces a genuinely multimodal output. Recommended only for Stage 3 iteration 2, after text-only distillation is working.</p>
+<p><strong>Recommendation:</strong> Start with Approach A. Deliver a text-only 1.58-bit student first. Multimodal extension is a follow-on research project.</p>
+<h3 id="stage-c-at-moe-scale">Stage C at MoE Scale</h3>
+<p>The three-loss distillation framework is architecturally unchanged. The implementation difference is the teacher&#39;s MoE routing.</p>
+<p><strong>MoE expert output aggregation for attention distillation:</strong> In Kimi K2.5, each MoE layer&#39;s output is a weighted sum of the 8 active expert outputs. For attention distillation, the &quot;teacher hidden state&quot; at the distillation layer is the post-MoE-aggregation representation. This is well-defined and can be captured with a forward hook — no special MoE-specific distillation logic is needed at the activation level.</p>
+<p><strong>Logits distillation is unchanged:</strong> The teacher&#39;s output logits are the final LM head predictions — fully dense, regardless of internal MoE structure. Standard KL divergence applies.</p>
+<h3 id="performance-expectations-2">Performance Expectations</h3>
+<p>Based on Stage 1–2 validated performance + published BitDistill claims:</p>
+<table>
+<thead>
+<tr>
+<th>Task Category</th>
+<th>Expected Student Performance vs Kimi K2.5</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Text generation / instruction following</td>
+<td>90–95%</td>
+</tr>
+<tr>
+<td>Code generation (HumanEval, SWE-bench)</td>
+<td>80–90%</td>
+</tr>
+<tr>
+<td>Mathematical reasoning (AIME, MATH)</td>
+<td>75–85%</td>
+</tr>
+<tr>
+<td>Hard reasoning (GPQA Diamond)</td>
+<td>70–80%</td>
+</tr>
+<tr>
+<td>Multilingual tasks</td>
+<td>85–92%</td>
+</tr>
+</tbody></table>
+<p>The gap vs a direct dense-to-dense distillation of similar scale is primarily due to the MoE-to-dense compression. These estimates will narrow if the curriculum coverage strategy successfully activates all 384 experts during training.</p>
+<h3 id="stage-3-exit-criteria">Stage 3 Exit Criteria</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Teacher inference pipeline sustains &gt;2,000 tok/s for 10B+ tokens without failure</li>
+<li><input disabled="" type="checkbox"> Expert routing diversity verified — all 384 experts activated in curriculum</li>
+<li><input disabled="" type="checkbox"> CT weight distribution convergence confirmed (same methodology as Stages 1–2)</li>
+<li><input disabled="" type="checkbox"> Student achieves ≥80% of Kimi K2.5 on HumanEval and ≥75% on GPQA Diamond</li>
+<li><input disabled="" type="checkbox"> CPU inference confirmed: memory ≤20GB, throughput ≥100 tok/s on 32-core CPU</li>
+<li><input disabled="" type="checkbox"> Model weights released or prepared for release</li>
+<li><input disabled="" type="checkbox"> Full technical report written documenting the MoE-to-dense distillation methodology</li>
+</ul>
+<hr>
+<h2 id="cross-stage-infrastructure">Cross-Stage Infrastructure</h2>
+<h3 id="evaluation-harness">Evaluation Harness</h3>
+<p>Build this once in Stage 0 and maintain it through all stages. Should support: MMLU, GPQA Diamond, HumanEval, MATH, GSM8K, SWE-bench (proxy), CNNDM (ROUGE), MNLI/QNLI/SST-2. Must run identically against FP16 and 1.58-bit models. Output format: structured JSON with all scores, allowing direct stage-to-stage comparison.</p>
+<h3 id="experiment-registry">Experiment Registry</h3>
+<p>Every training run should be logged with: commit hash, hyperparameter config, CT token count at distillation start, hardware used, wall-clock time, peak memory, and final benchmark scores. This registry is critical for debugging regressions and communicating results.</p>
+<h3 id="1-58-bit-inference-runtime">1.58-bit Inference Runtime</h3>
+<p>The project&#39;s output is only as valuable as the inference experience. From Stage 0 onward, verify that every student checkpoint runs correctly in a ternary-weight-optimized inference engine (bitnet.cpp is the current reference implementation). Do not allow a situation where training and inference codebases diverge.</p>
+<hr>
+<h2 id="team-scaling-by-stage">Team Scaling by Stage</h2>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Min Team Size</th>
+<th>Key Roles</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Stage 0</td>
+<td>2–3</td>
+<td>ML Engineer (training), ML Engineer (eval/infra)</td>
+</tr>
+<tr>
+<td>Stage 1</td>
+<td>4–6</td>
+<td>+ Senior ML Researcher, Data Engineer</td>
+</tr>
+<tr>
+<td>Stage 2</td>
+<td>8–11</td>
+<td>+ Infra/DevOps Engineer, additional ML Engineers</td>
+</tr>
+<tr>
+<td>Stage 3</td>
+<td>15–20</td>
+<td>+ Teacher Inference Specialist, Data Curator, Post-training Engineer, PM</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="risk-register">Risk Register</h2>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Stage</th>
+<th>Likelihood</th>
+<th>Severity</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SubLN insertion corrupts gradient flow</td>
+<td>0</td>
+<td>Medium</td>
+<td>High</td>
+<td>Unit-test each modified layer before full training</td>
+</tr>
+<tr>
+<td>CT does not converge at scale (weight dist stays Gaussian)</td>
+<td>1, 2</td>
+<td>Medium</td>
+<td>High</td>
+<td>Extend CT budget; monitor distribution at checkpoints</td>
+</tr>
+<tr>
+<td>Teacher+student VRAM budget exceeded</td>
+<td>2, 3</td>
+<td>Medium</td>
+<td>Medium</td>
+<td>FP8 teacher; gradient checkpointing; scale down sequence length</td>
+</tr>
+<tr>
+<td>Expert routing diversity insufficient</td>
+<td>3</td>
+<td>High</td>
+<td>High</td>
+<td>Analyze routing stats before full distillation; iterate curriculum</td>
+</tr>
+<tr>
+<td>MoE-to-dense gap too large (student performance unacceptable)</td>
+<td>3</td>
+<td>Medium</td>
+<td>High</td>
+<td>Increase student size to 70B; extend distillation data</td>
+</tr>
+<tr>
+<td>Distributed training introduces silent gradient bugs</td>
+<td>1+</td>
+<td>Low-Medium</td>
+<td>High</td>
+<td>Cross-check single-GPU vs multi-GPU loss curves on same batch</td>
+</tr>
+<tr>
+<td>Teacher inference pipeline bottleneck</td>
+<td>3</td>
+<td>Medium</td>
+<td>Medium</td>
+<td>Pre-cache logits; async pipeline with large SSD buffer</td>
+</tr>
+</tbody></table>
+</article></div>
+</main>
+</body>
+</html>

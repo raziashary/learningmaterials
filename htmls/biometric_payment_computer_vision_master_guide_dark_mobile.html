@@ -19,6 +19,8 @@ body{margin:0;background:var(--paper);color:var(--text);font-family:system-ui,-a
 a{color:var(--accent);text-decoration:none;text-underline-offset:3px}a:hover{text-decoration:underline}
 .topbar{position:sticky;top:0;z-index:50;height:52px;display:flex;align-items:center;gap:8px;padding:0 12px;background:#0d1119;border-bottom:1px solid var(--border)}
 .topbar .title{min-width:0;flex:1;font-size:13px;font-weight:700;color:#dfe7f5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar .home-link{flex-shrink:0;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:9px;padding:7px 10px;font:600 13px/1 system-ui,-apple-system,"Segoe UI",sans-serif;white-space:nowrap}
+.topbar .home-link:hover,.topbar .home-link:focus-visible{background:var(--surface3);text-decoration:none}
 .topbar button{appearance:none;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:9px;padding:7px 10px;font:600 13px/1 system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer}
 .topbar button:active{background:var(--surface3)}
 .sidebar{position:fixed;top:52px;left:0;bottom:0;width:330px;z-index:45;background:#0f141d;border-right:1px solid var(--border);padding:14px;overflow-y:auto;overscroll-behavior:contain;transform:translate3d(-102%,0,0);transition:transform .16s ease-out;will-change:transform}
@@ -51,7 +53,7 @@ p.math-block math[display="block"]{display:block;width:max-content;max-width:non
 @media(min-width:1240px){.sidebar{transform:none}.overlay{display:none!important}.topbar #tocBtn{display:none}main{margin-left:calc(330px + ((100vw - 330px - var(--max))/2));margin-right:auto}}
 @media(max-width:720px){
   :root{--fs:16px;--lh:1.69}
-  .topbar{height:48px;padding:0 8px;gap:6px}.topbar .title{font-size:12px}.topbar button{padding:7px 8px;font-size:12px}
+  .topbar{height:48px;padding:0 8px;gap:6px}.topbar .title{font-size:12px}.topbar button,.topbar .home-link{padding:7px 8px;font-size:12px}
   .sidebar{top:48px;width:min(88vw,330px);transition-duration:.12s}.overlay{inset:48px 0 0}
   main{padding:23px 16px 76px}
   h1.book-title{font-size:1.9rem;line-height:1.17;margin-top:.15em}h1{font-size:1.61rem;margin-top:2.6em}h2{font-size:1.34rem;margin-top:2.15em}h3{font-size:1.14rem;margin-top:1.8em}
@@ -68,6 +70,7 @@ p.math-block math[display="block"]{display:block;width:max-content;max-width:non
 </head>
 <body>
 <header class="topbar">
+  <a class="home-link" href="../index.html">← Library</a>
   <button id="tocBtn" type="button" aria-controls="sidebar" aria-expanded="false" aria-label="Open contents">☰</button>
   <div class="title">Biometric Payment CV — Master Guide</div>
   <button id="fontMinus" type="button" aria-label="Decrease text size">A−</button>

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="A growing library of visual, in-depth learning guides by Razia Shary.">
+  <title>Learning Materials · Razia Shary</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f7f5f1;
+      color: #21302d;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; }
+    a { color: inherit; }
+    .shell { width: min(100% - 40px, 1080px); margin: 0 auto; }
+    .topbar { border-bottom: 1px solid #dedbd3; }
+    .topbar .shell { display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 72px; }
+    .brand { font-size: .9rem; font-weight: 800; letter-spacing: -.025em; text-decoration: none; }
+    .topbar span { color: #66746d; font-size: .8rem; }
+    main { padding: 88px 0 104px; }
+    .eyebrow { margin: 0 0 15px; color: #66776d; font-size: .75rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+    h1 { max-width: 760px; margin: 0; font-size: clamp(3rem, 8vw, 6rem); line-height: 1.03; letter-spacing: -.075em; }
+    .intro { max-width: 620px; margin: 25px 0 0; color: #5b6a62; font-size: clamp(1rem, 2vw, 1.2rem); line-height: 1.65; }
+    .section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin: 78px 0 20px; border-bottom: 1px solid #dedbd3; }
+    h2 { margin: 0 0 15px; font-size: 1.12rem; letter-spacing: -.03em; }
+    .count { color: #718079; font-size: .85rem; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .card { display: flex; flex-direction: column; min-height: 318px; padding: 30px; border: 1px solid #d8ded8; border-radius: 16px; background: #eaf2ed; text-decoration: none; transition: transform .18s ease, box-shadow .18s ease; }
+    .card:nth-child(2) { border-color: #ded9e7; background: #f0edf5; }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 15px 35px #21302d18; }
+    .card:focus-visible { outline: 3px solid #295eaa; outline-offset: 4px; }
+    .tag { width: fit-content; padding: 6px 10px; border: 1px solid currentColor; border-radius: 99px; color: #446755; font-size: .68rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+    .card:nth-child(2) .tag { color: #645479; }
+    h3 { max-width: 420px; margin: 26px 0 12px; font-size: clamp(1.6rem, 3vw, 2.15rem); line-height: 1.15; letter-spacing: -.045em; }
+    .card p { max-width: 440px; margin: 0; color: #586a60; line-height: 1.55; }
+    .card:nth-child(2) p { color: #6b6175; }
+    .open { margin-top: auto; padding-top: 30px; font-size: .88rem; font-weight: 750; }
+    footer { padding: 28px 0; border-top: 1px solid #dedbd3; color: #66746d; font-size: .8rem; }
+    @media (max-width: 650px) {
+      .topbar .shell { min-height: 62px; }
+      main { padding: 64px 0 80px; }
+      .section-heading { margin-top: 58px; }
+      .grid { grid-template-columns: 1fr; }
+      .card { min-height: 290px; padding: 26px; }
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { background: #111917; color: #eaf2ed; }
+      .topbar, .section-heading, footer { border-color: #33423a; }
+      .topbar span, .intro, .count, footer { color: #a2b4a8; }
+      .card { border-color: #3b5b49; background: #1b3025; }
+      .card:nth-child(2) { border-color: #514360; background: #2a2332; }
+      .tag { color: #abd3b6; }
+      .card:nth-child(2) .tag { color: #c8b4df; }
+      .card p { color: #b0c5b7; }
+      .card:nth-child(2) p { color: #c3b4cd; }
+    }
+    @media (prefers-reduced-motion: reduce) { .card { transition: none; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell">
+      <a class="brand" href="./">Razia / Learning Materials</a>
+      <span>Open study notes</span>
+    </div>
+  </header>
+  <main class="shell">
+    <p class="eyebrow">A personal learning library</p>
+    <h1>Learn deeply.<br>Return easily.</h1>
+    <p class="intro">A growing collection of long-form guides for ideas worth revisiting. Choose a subject and pick up wherever you left off.</p>
+    <section aria-labelledby="guides-heading">
+      <div class="section-heading">
+        <h2 id="guides-heading">Explore the guides</h2>
+        <span class="count">02 guides</span>
+      </div>
+      <div class="grid">
+        <a class="card" href="htmls/biometric_payment_computer_vision_master_guide_dark_mobile.html">
+          <span class="tag">Computer vision</span>
+          <h3>Biometric Payment Systems</h3>
+          <p>A deep architecture guide to computer vision, recognition, and the systems behind biometric payments.</p>
+          <span class="open">Read guide <span aria-hidden="true">↗</span></span>
+        </a>
+        <a class="card" href="htmls/neural_networks_ml_transformers_connected_mobile.html">
+          <span class="tag">Machine learning</span>
+          <h3>Neural Networks &amp; Transformers</h3>
+          <p>A connected reference from classical machine learning through neural networks, attention, and language models.</p>
+          <span class="open">Read guide <span aria-hidden="true">↗</span></span>
+        </a>
+      </div>
+    </section>
+  </main>
+  <footer><div class="shell">Built for curious revisits.</div></footer>
+</body>
+</html>
